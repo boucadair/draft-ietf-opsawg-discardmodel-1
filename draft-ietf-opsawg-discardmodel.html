@@ -1183,6 +1183,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-sub-type-definitions" class="internal xref">Sub-type Definitions</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-information-model-yang-modu" class="internal xref">Information Model - YANG Module</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
@@ -1234,12 +1237,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-information-model-yang-modu" class="internal xref">Information Model - YANG Module</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-where-do-packets-get-droppe" class="internal xref">Where do packets get dropped?</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-where-do-packets-get-droppe" class="internal xref">Where do packets get dropped?</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-example-signal-to-mitigatio" class="internal xref">Example signal-to-mitigation action mapping</a></p>
@@ -1656,8 +1654,8 @@ module: ietf-packet-discard-reporting-sx
                 +-- bytes?     uint64
 </pre><a href="#section-4.1-6" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-7">The corresponding YANG module is defined in <a href="#infomodel-module" class="auto internal xref">Appendix A</a>.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.1-8">For additional context, <a href="#wheredropped" class="auto internal xref">Appendix A.1</a> provides an example of where packets may be discarded in a device.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+<p id="section-4.1-7">The corresponding YANG module is defined in <a href="#infomodel-module" class="auto internal xref">Section 4.3</a>.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<p id="section-4.1-8">For additional context, <a href="#wheredropped" class="auto internal xref">Appendix A</a> provides an example of where packets may be discarded in a device.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sub-type-definitions">
@@ -1710,1090 +1708,13 @@ module: ietf-packet-discard-reporting-sx
 <p id="section-4.2-2">An example of possible signal-to-mitigation action mapping is provided in <a href="#mapping" class="auto internal xref">Appendix B</a>.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-</section>
-</div>
-<div id="datamodel">
-<section id="section-5">
-      <h2 id="name-data-model">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-data-model" class="section-name selfRef">Data Model</a>
-      </h2>
-<p id="section-5-1">This data model implements the information model defined in <a href="#infomodel" class="auto internal xref">Section 4</a> for the interface and device components.  This is classed as a Network Element model as defined by <span>[<a href="#RFC1157" class="cite xref">RFC1157</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<div id="datamodel-structure">
-<section id="section-5.1">
-        <h3 id="name-structure-2">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-structure-2" class="section-name selfRef">Structure</a>
-        </h3>
-<p id="section-5.1-1">There is a direct mapping between the information model components and their data model implementations, with each component in the hierarchy represented by corresponding YANG containers and leaves.  The following YANG tree diagram shows the complete structure:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.1-2">
-<pre>
-module: ietf-packet-discard-reporting
-  +--rw interface* [name] {per-interface-stats}?
-  |  +--rw name        string
-  |  +--rw traffic* [direction]
-  |  |  +--rw direction    identityref
-  |  |  +--rw l2
-  |  |  |  +--rw frames?   uint64
-  |  |  |  +--rw bytes?    uint64
-  |  |  +--rw l3
-  |  |  |  +--rw address-family-stat* [address-family]
-  |  |  |     +--rw address-family    identityref
-  |  |  |     +--rw packets?          uint64
-  |  |  |     +--rw bytes?            uint64
-  |  |  |     +--rw unicast
-  |  |  |     |  +--rw packets?   uint64
-  |  |  |     |  +--rw bytes?     uint64
-  |  |  |     +--rw multicast
-  |  |  |        +--rw packets?   uint64
-  |  |  |        +--rw bytes?     uint64
-  |  |  +--rw qos!
-  |  |     +--rw class* [id]
-  |  |        +--rw id         string
-  |  |        +--rw packets?   uint64
-  |  |        +--rw bytes?     uint64
-  |  +--rw discards* [direction]
-  |     +--rw direction    identityref
-  |     +--rw l2
-  |     |  +--rw frames?   uint64
-  |     |  +--rw bytes?    uint64
-  |     +--rw l3
-  |     |  +--rw address-family-stat* [address-family]
-  |     |     +--rw address-family    identityref
-  |     |     +--rw packets?          uint64
-  |     |     +--rw bytes?            uint64
-  |     |     +--rw unicast
-  |     |     |  +--rw packets?   uint64
-  |     |     |  +--rw bytes?     uint64
-  |     |     +--rw multicast
-  |     |        +--rw packets?   uint64
-  |     |        +--rw bytes?     uint64
-  |     +--rw errors
-  |     |  +--rw l2
-  |     |  |  +--rw rx!
-  |     |  |  |  +--rw frames?          uint32
-  |     |  |  |  +--rw crc-error?       uint32
-  |     |  |  |  +--rw invalid-mac?     uint32
-  |     |  |  |  +--rw invalid-vlan?    uint32
-  |     |  |  |  +--rw invalid-frame?   uint32
-  |     |  |  +--rw tx!
-  |     |  |     +--rw frames?   uint32
-  |     |  +--rw l3
-  |     |  |  +--rw rx!
-  |     |  |  |  +--rw packets?          uint32
-  |     |  |  |  +--rw checksum-error?   uint32
-  |     |  |  |  +--rw mtu-exceeded?     uint32
-  |     |  |  |  +--rw invalid-packet?   uint32
-  |     |  |  +--rw ttl-expired?     uint32
-  |     |  |  +--rw no-route?        uint32
-  |     |  |  +--rw invalid-sid?     uint32
-  |     |  |  +--rw invalid-label?   uint32
-  |     |  |  +--rw tx!
-  |     |  |     +--rw packets?   uint32
-  |     |  +--rw internal
-  |     |     +--rw packets?        uint32
-  |     |     +--rw parity-error?   uint32
-  |     +--rw policy
-  |     |  +--rw l2
-  |     |  |  +--rw frames?   uint32
-  |     |  |  +--rw acl?      uint32
-  |     |  +--rw l3
-  |     |     +--rw packets?      uint32
-  |     |     +--rw acl?          uint32
-  |     |     +--rw policer
-  |     |     |  +--rw packets?   uint32
-  |     |     |  +--rw bytes?     uint32
-  |     |     +--rw null-route?   uint32
-  |     |     +--rw rpf?          uint32
-  |     |     +--rw ddos?         uint32
-  |     +--rw no-buffer
-  |        +--rw class* [id]
-  |           +--rw id         string
-  |           +--rw packets?   uint64
-  |           +--rw bytes?     uint64
-  +--rw device! {per-device-stats}?
-     +--rw traffic
-     |  +--rw l2
-     |  |  +--rw frames?   uint64
-     |  |  +--rw bytes?    uint64
-     |  +--rw l3
-     |  |  +--rw address-family-stat* [address-family]
-     |  |     +--rw address-family    identityref
-     |  |     +--rw packets?          uint64
-     |  |     +--rw bytes?            uint64
-     |  |     +--rw unicast
-     |  |     |  +--rw packets?   uint64
-     |  |     |  +--rw bytes?     uint64
-     |  |     +--rw multicast
-     |  |        +--rw packets?   uint64
-     |  |        +--rw bytes?     uint64
-     |  +--rw qos!
-     |     +--rw class* [id]
-     |        +--rw id         string
-     |        +--rw packets?   uint64
-     |        +--rw bytes?     uint64
-     +--rw discards
-        +--rw l2
-        |  +--rw frames?   uint64
-        |  +--rw bytes?    uint64
-        +--rw l3
-        |  +--rw address-family-stat* [address-family]
-        |     +--rw address-family    identityref
-        |     +--rw packets?          uint64
-        |     +--rw bytes?            uint64
-        |     +--rw unicast
-        |     |  +--rw packets?   uint64
-        |     |  +--rw bytes?     uint64
-        |     +--rw multicast
-        |        +--rw packets?   uint64
-        |        +--rw bytes?     uint64
-        +--rw errors
-        |  +--rw l2
-        |  |  +--rw rx!
-        |  |  |  +--rw frames?          uint32
-        |  |  |  +--rw crc-error?       uint32
-        |  |  |  +--rw invalid-mac?     uint32
-        |  |  |  +--rw invalid-vlan?    uint32
-        |  |  |  +--rw invalid-frame?   uint32
-        |  |  +--rw tx!
-        |  |     +--rw frames?   uint32
-        |  +--rw l3
-        |  |  +--rw rx!
-        |  |  |  +--rw packets?          uint32
-        |  |  |  +--rw checksum-error?   uint32
-        |  |  |  +--rw mtu-exceeded?     uint32
-        |  |  |  +--rw invalid-packet?   uint32
-        |  |  +--rw ttl-expired?     uint32
-        |  |  +--rw no-route?        uint32
-        |  |  +--rw invalid-sid?     uint32
-        |  |  +--rw invalid-label?   uint32
-        |  |  +--rw tx!
-        |  |     +--rw packets?   uint32
-        |  +--rw internal
-        |     +--rw packets?        uint32
-        |     +--rw parity-error?   uint32
-        +--rw policy
-        |  +--rw l2
-        |  |  +--rw frames?   uint32
-        |  |  +--rw acl?      uint32
-        |  +--rw l3
-        |     +--rw packets?      uint32
-        |     +--rw acl?          uint32
-        |     +--rw policer
-        |     |  +--rw packets?   uint32
-        |     |  +--rw bytes?     uint32
-        |     +--rw null-route?   uint32
-        |     +--rw rpf?          uint32
-        |     +--rw ddos?         uint32
-        +--rw no-buffer
-           +--rw class* [id]
-              +--rw id         string
-              +--rw packets?   uint64
-              +--rw bytes?     uint64
-</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="requirements">
-<section id="section-5.2">
-        <h3 id="name-implementation-requirements">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-implementation-requirements" class="section-name selfRef">Implementation Requirements</a>
-        </h3>
-<p id="section-5.2-1">The following requirements apply to the implementation of the data model and are intended to ensure consistent implementation across different vendors and platforms while allowing for platform-specific optimisations where needed.  While the model defines a comprehensive set of counters and statistics, implementations <span class="bcp14">MAY</span> support a subset of the defined features based on device capabilities and operational requirements. However, implementations <span class="bcp14">MUST</span> clearly document which features are supported and how they map to the model.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">Requirements 1-10 relate to packets forwarded or discarded by the device, while requirement 11 relates to packets destined for or originating from the device:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-5.2-3">
-<li id="section-5.2-3.1">
-            <p id="section-5.2-3.1.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">MUST</span> be accounted for.<a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.2">
-            <p id="section-5.2-3.2.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">SHOULD</span> be attributed to the physical or logical interface of the device where they occur.  Where they cannot be attributed to the interface, they <span class="bcp14">MUST</span> be attributed to the device.<a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.3">
-            <p id="section-5.2-3.3.1">An individual frame <span class="bcp14">MUST</span> only be accounted for by either the Layer 2 traffic class or the Layer 2 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.4">
-            <p id="section-5.2-3.4.1">An individual packet <span class="bcp14">MUST</span> only be accounted for by either the Layer 3 traffic class or the Layer 3 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.5">
-            <p id="section-5.2-3.5.1">A frame accounted for at Layer 2 <span class="bcp14">SHOULD NOT</span> be accounted for at Layer 3 and vice versa.  An implementation <span class="bcp14">MUST</span> indicate which layers traffic and discards are counted against.  This is to avoid double counting.<a href="#section-5.2-3.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.6">
-            <p id="section-5.2-3.6.1">The aggregate Layer 2 and Layer 3 traffic and discard classes <span class="bcp14">SHOULD</span> account for all underlying frames or packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.7">
-            <p id="section-5.2-3.7.1">The aggregate Quality of Service (QoS) traffic and no buffer discard classes <span class="bcp14">MUST</span> account for all underlying packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.8">
-            <p id="section-5.2-3.8.1">In addition to the Layer 2 and Layer 3 aggregate classes, an individual discarded packet <span class="bcp14">MUST</span> only account against a single error, policy, or no-buffer discard subclass.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.9">
-            <p id="section-5.2-3.9.1">When there are multiple reasons for discarding a packet, the ordering of discard class reporting <span class="bcp14">MUST</span> be defined.<a href="#section-5.2-3.9.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.10">
-            <p id="section-5.2-3.10.1">If Diffserv <span>[<a href="#RFC2475" class="cite xref">RFC2475</a>]</span> is not used, no-buffer discards <span class="bcp14">SHOULD</span> be reported as class0, which represents the default class.<a href="#section-5.2-3.10.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-5.2-3.11">
-            <p id="section-5.2-3.11.1">Traffic to the device control plane has its own class, however, traffic from the device control plane <span class="bcp14">SHOULD</span> be accounted for in the same way as other egress traffic.<a href="#section-5.2-3.11.1" class="pilcrow">¶</a></p>
-</li>
-        </ol>
-</section>
-</div>
-<div id="examples">
-<section id="section-5.3">
-        <h3 id="name-usage-examples">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-usage-examples" class="section-name selfRef">Usage Examples</a>
-        </h3>
-<p id="section-5.3-1">If all of the requirements are met, a "good" unicast IPv4 packet received would increment:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.3-2.1">
-            <p id="section-5.3-2.1.1">interface/ingress/traffic/l3/v4/unicast/packets<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-2.2">
-            <p id="section-5.3-2.2.1">interface/ingress/traffic/l3/v4/unicast/bytes<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-2.3">
-            <p id="section-5.3-2.3.1">interface/ingress/traffic/qos/class_0/packets<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-2.4">
-            <p id="section-5.3-2.4.1">interface/ingress/traffic/qos/class_0/bytes<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-3">A received unicast IPv6 packet discarded due to Hop Limit expiry would increment:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.3-4.1">
-            <p id="section-5.3-4.1.1">interface/ingress/discards/l3/v6/unicast/packets<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-4.2">
-            <p id="section-5.3-4.2.1">interface/ingress/discards/l3/v6/unicast/bytes<a href="#section-5.3-4.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-4.3">
-            <p id="section-5.3-4.3.1">interface/ingress/discards/l3/rx/ttl-expired/packets<a href="#section-5.3-4.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-5">An IPv4 packet discarded on egress due to no buffers would increment:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.3-6.1">
-            <p id="section-5.3-6.1.1">interface/egress/discards/l3/v4/unicast/packets<a href="#section-5.3-6.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-6.2">
-            <p id="section-5.3-6.2.1">interface/egress/discards/l3/v4/unicast/bytes<a href="#section-5.3-6.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-6.3">
-            <p id="section-5.3-6.3.1">interface/egress/discards/no-buffer/class_0/packets<a href="#section-5.3-6.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-6.4">
-            <p id="section-5.3-6.4.1">interface/egress/discards/no-buffer/class_0/bytes<a href="#section-5.3-6.4.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-7">A multicast IPv6 packet dropped due to RPF check failure would increment:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.3-8.1">
-            <p id="section-5.3-8.1.1">interface/ingress/discards/l3/v6/multicast/packets<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-8.2">
-            <p id="section-5.3-8.2.1">interface/ingress/discards/l3/v6/multicast/bytes<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-8.3">
-            <p id="section-5.3-8.3.1">interface/ingress/discards/policy/l3/rpf/packets<a href="#section-5.3-8.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-</section>
-</div>
-</section>
-</div>
-<div id="datamodel-module">
-<section id="section-6">
-      <h2 id="name-data-model-yang-module">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-data-model-yang-module" class="section-name selfRef">Data model - YANG Module</a>
-      </h2>
-<div class="breakable sourcecode" id="section-6-1">
-<pre>&lt;CODE BEGINS&gt;
-module ietf-packet-discard-reporting {
-  yang-version 1.1;
-  namespace
-    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting";
-  prefix plr;
-
-  organization
-    "IETF OPSAWG (Operations and Management Area Working Group)";
-  contact
-    "WG Web:   https://datatracker.ietf.org/wg/opsawg/
-     WG List:  mailto:opsawg@ietf.org
-
-     Author:   John Evans
-               &lt;mailto:jevanamz@amazon.co.uk&gt;
-
-     Author:   Oleksandr Pylypenko
-               &lt;mailto:opyl@amazon.com&gt;
-
-     Author:   Jeffrey Haas
-               &lt;mailto:jhaas@juniper.net&gt;
-
-     Author:   Aviran Kadosh
-               &lt;mailto:akadosh@cisco.com&gt;
-
-     Author:   Mohamed Boucadair
-               &lt;mailto:mohamed.boucadair@orange.com&gt;";
-  description
-    "This module defines an information model for packet discard
-     reporting.
-
-     Copyright (c) 2024 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject
-     to the license terms contained in, the Revised BSD License
-     set forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (https://trustee.ietf.org/license-info).
-
-     This version of this YANG module is part of RFC XXXX; see the
-     RFC itself for full legal notices.";
-
-  revision 2024-06-04 {
-    description
-      "Initial revision.";
-    reference
-      "RFC XXXX: An Information Model for Packet Discard Reporting";
-  }
-
-  /*
-   * Features
-   */
-
-  feature per-interface-stats {
-    description
-      "Per-interface statistics are available on this device";
-  }
-
-  feature per-device-stats {
-    description
-      "Global device statistics are available on this device";
-  }
-
-  /*
-   * Identities
-   */
-
-  identity direction {
-    description
-      "Defines a direction for the reported statistics";
-  }
-
-  identity ingress {
-    base direction;
-    description
-      "Reports statistics for the received from the network packets";
-  }
-
-  identity egress {
-    base direction;
-    description
-      "Reports statistics for the sent to the network packets";
-  }
-
-  identity address-family {
-    description
-      "Defines a type for the address family.";
-  }
-
-  identity ipv4 {
-    base address-family;
-    description
-      "Identity for an IPv4 address family.";
-  }
-
-  identity ipv6 {
-    base address-family;
-    description
-      "Identity for an IPv6 address family.";
-  }
-
-  identity all {
-    base address-family;
-    description
-      "Identity for all address families.";
-  }
-
-  /*
-   * Groupings
-   */
-
-  grouping basic-packets-64 {
-    description
-      "Grouping for 64-bit Layer 3 packet counters.";
-    leaf packets {
-      type uint64;
-      description
-        "Number of Layer 3 packets.";
-    }
-  }
-
-  grouping basic-packets-bytes-64 {
-    description
-      "Grouping for 64-bit Layer 3 packet and byte counters.";
-    uses basic-packets-64;
-    leaf bytes {
-      type uint64;
-      description
-        "Number of Layer 3 bytes.";
-    }
-  }
-
-  grouping basic-frames-64 {
-    description
-      "Grouping for 64-bit Layer 2 frame counters.";
-    leaf frames {
-      type uint64;
-      description
-        "Number of Layer 2 frames.";
-    }
-  }
-
-  grouping basic-frames-bytes-64 {
-    description
-      "Grouping for 64-bit Layer 2 frame and byte counters.";
-    uses basic-frames-64;
-    leaf bytes {
-      type uint64;
-      description
-        "Number of Layer 2 bytes.";
-    }
-  }
-
-  grouping basic-packets-32 {
-    description
-      "Grouping for 32-bit Layer 3 packet counters.";
-    leaf packets {
-      type uint32;
-      description
-        "Number of Layer 3 packets.";
-    }
-  }
-
-  grouping basic-packets-bytes-32 {
-    description
-      "Grouping for 32-bit Layer 3 packet and byte counters.";
-    uses basic-packets-32;
-    leaf bytes {
-      type uint32;
-      description
-        "Number of Layer 3 bytes.";
-    }
-  }
-
-  grouping basic-frames-32 {
-    description
-      "Grouping for 32-bit Layer 2 frame counters.";
-    leaf frames {
-      type uint32;
-      description
-        "Number of Layer 2 frames.";
-    }
-  }
-
-  grouping basic-frames-bytes-32 {
-    description
-      "Grouping for 32-bit Layer 2 frame and byte counters.";
-    uses basic-frames-32;
-    leaf bytes {
-      type uint32;
-      description
-        "Number of Layer 2 bytes.";
-    }
-  }
-
-  grouping l2-traffic {
-    description
-      "Layer 2 traffic counters.";
-    uses basic-frames-bytes-64;
-  }
-
-  grouping ip {
-    description
-      "Layer 3 traffic counters per address family.";
-    list address-family-stat {
-      key "address-family";
-      description
-        "Reports per address family traffic counters.";
-      leaf address-family {
-        type identityref {
-          base address-family;
-        }
-        description
-          "Specifies an address family.";
-      }
-      uses basic-packets-bytes-64;
-      container unicast {
-        description
-          "Unicast traffic counters.";
-        uses basic-packets-bytes-64;
-      }
-      container multicast {
-        description
-          "Multicast traffic counters.";
-        uses basic-packets-bytes-64;
-      }
-    }
-  }
-
-  grouping l3-traffic {
-    description
-      "Layer 3 traffic counters.";
-    uses ip;
-  }
-
-  grouping qos {
-    description
-      "Quality of Service (QoS) traffic counters.";
-    list class {
-      key "id";
-      min-elements 1;
-      description
-        "QoS class traffic counters.";
-      leaf id {
-        type string;
-        description
-          "QoS class identifier.";
-      }
-      uses basic-packets-bytes-64;
-    }
-  }
-
-  grouping traffic {
-    description
-      "All traffic counters.";
-    container l2 {
-      description
-        "Layer 2 traffic counters.";
-      uses l2-traffic;
-    }
-    container l3 {
-      description
-        "Layer 3 traffic counters.";
-      uses l3-traffic;
-    }
-    container qos {
-      presence "Qos reporting is enabled";
-      description
-        "QoS traffic counters.";
-      uses qos;
-    }
-  }
-
-  grouping errors-l2-rx {
-    description
-      "Layer 2 ingress frame error discard counters.";
-    container rx {
-      presence "rx";
-      description
-        "Layer 2 ingress frame receive error discard counters.";
-      leaf frames {
-        type uint32;
-        description
-          "The number of frames discarded due to errors with the received frame.";
-      }
-      leaf crc-error {
-        type uint32;
-        description
-          "The number of frames discarded due to CRC error.";
-      }
-      leaf invalid-mac {
-        type uint32;
-        description
-          "The number of frames discarded due to an invalid MAC address.";
-      }
-      leaf invalid-vlan {
-        type uint32;
-        description
-          "The number of frames discarded due to an invalid VLAN tag.";
-      }
-      leaf invalid-frame {
-        type uint32;
-        description
-          "The number of invalid frames discarded due to other reasons, not limited to: malformed frames, frame-size violations.";
-      }
-    }
-  }
-
-  grouping errors-l3-rx {
-    description
-      "Layer 3 ingress packet error discard counters.";
-    container rx {
-      presence "rx";
-      description
-        "Layer 3 ingress packet receive error discard counters.";
-      leaf packets {
-        type uint32;
-        description
-          "The number of Layer 3 packets discarded due to errors in the received packet.";
-      }
-      leaf checksum-error {
-        type uint32;
-        description
-          "The number of received packets discarded due to a checksum error.";
-      }
-      leaf mtu-exceeded {
-        type uint32;
-        description
-          "The number of received packets discarded due to MTU exceeded.";
-      }
-      leaf invalid-packet {
-        type uint32;
-        description
-          "The number of invalid packets discarded due to other reasons, not limited to: invalid packet length, invalid header fields, invalid options, invalid protocol version, invalid flags or control bits, malformed packets.";
-      }
-    }
-    leaf ttl-expired {
-      type uint32;
-      description
-        "The number of received packets discarded due to expired TTL.";
-    }
-    leaf no-route {
-      type uint32;
-      description
-        "The number of packets discarded due to not matching a valid route.";
-    }
-    leaf invalid-sid {
-      type uint32;
-      description
-        "The number of packets discarded due to an invalid Segment Routing (SR) SID.";
-    }
-    leaf invalid-label {
-      type uint32;
-      description
-        "The number of packets discarded due to an invalid MPLS label.";
-    }
-  }
-
-  grouping errors-l3-int {
-    description
-      "Internal error discard counters.";
-    leaf packets {
-      type uint32;
-      description
-        "The number of packets discarded due to internal errors.";
-    }
-    leaf parity-error {
-      type uint32;
-      description
-        "The number of packets discarded due to parity errors.";
-    }
-  }
-
-  grouping errors-l2-tx {
-    description
-      "Layer 2 transmit error discard counters.";
-    container tx {
-      presence "tx";
-      description
-        "Layer 2 transmit frame error discard counters.";
-      leaf frames {
-        type uint32;
-        description
-          "The number of Layer 2 frames discarded due to errors when transmitting.";
-      }
-    }
-  }
-
-  grouping errors-l3-tx {
-    description
-      "Layer 3 transmit error discard counters.";
-    container tx {
-      presence "tx";
-      description
-        "Layer 3 transmit packet error discard counters.";
-      leaf packets {
-        type uint32;
-        description
-          "The number of Layer 3 packets discarded due to errors when transmitting.";
-      }
-    }
-  }
-
-  grouping errors {
-    description
-      "Error discard counters.";
-    container l2 {
-      description
-        "Layer 2 frame error discard counters.";
-      uses errors-l2-rx;
-      uses errors-l2-tx;
-    }
-    container l3 {
-      description
-        "Layer 3 packet error discard counters.";
-      uses errors-l3-rx;
-      uses errors-l3-tx;
-    }
-    container internal {
-      description
-        "Internal error discard counters.";
-      uses errors-l3-int;
-    }
-  }
-
-  grouping policy-l2 {
-    description
-      "Layer 2 policy frame discard counters.";
-    leaf frames {
-      type uint32;
-      description
-        "The number of Layer 2 frames discarded due to policy.";
-    }
-    leaf acl {
-      type uint32;
-      description
-        "The number of frames discarded due to Layer 2 ACLs.";
-    }
-  }
-
-  grouping policy-l3 {
-    description
-      "Layer 3 policy packet discard counters.";
-    leaf packets {
-      type uint32;
-      description
-        "The number of Layer 3 packets discarded due to policy.";
-    }
-    leaf acl {
-      type uint32;
-      description
-        "The number of packets discarded due to Layer 3 ACLs.";
-    }
-    container policer {
-      description
-        "The number of packets discarded due ingress policer violations.";
-      uses basic-packets-bytes-32;
-    }
-    leaf null-route {
-      type uint32;
-      description
-        "The number of packets discarded due to matching a null route.";
-    }
-    leaf rpf {
-      type uint32;
-      description
-        "The number of packets discarded due to failing Reverse Path Forwarding (RPF) check.";
-    }
-    leaf ddos {
-      type uint32;
-      description
-        "The number of packets discarded due to DDoS protection policies.";
-    }
-  }
-
-  grouping discards {
-    description
-      "Discard counters.";
-    container l2 {
-      description
-        "Ingress Layer 2 frame discard counters.";
-      uses l2-traffic;
-    }
-    container l3 {
-      description
-        "Ingress Layer 3 packet discard counters.";
-      uses l3-traffic;
-    }
-    container errors {
-      description
-        "Ingress error discard counters.";
-      uses errors;
-    }
-    container policy {
-      description
-        "Ingress policy-related discard counters.";
-      uses policy;
-    }
-    container no-buffer {
-      description
-        "Ingress discard counters due to buffer
-         unavailability.";
-      uses qos;
-    }
-  }
-
-  grouping policy {
-    description
-      "Policy-related discard counters.";
-    container l2 {
-      description
-        "Layer 2 policy frame discard counters.";
-      uses policy-l2;
-    }
-    container l3 {
-      description
-        "Layer 3 policy packet discard counters.";
-      uses policy-l3;
-    }
-  }
-
-  grouping device {
-    description
-      "Device-level traffic and discard counters.";
-    container traffic {
-      description
-        "Traffic counters.";
-      uses traffic;
-    }
-    container discards {
-      description "Discard counters.";
-      uses discards;
-    }
-  }
-
-  grouping interface {
-    description
-      "Interface-level traffic and discard counters.";
-    list traffic {
-      key "direction";
-      description
-        "Traffic counters.";
-      leaf direction {
-        type identityref {
-          base direction;
-        }
-        description
-          "Specifies a direction.";
-      }
-      uses traffic;
-    }
-    list discards {
-      key "direction";
-      description
-        "Discard counters.";
-      leaf direction {
-        type identityref {
-          base direction;
-        }
-        description
-          "Specifies a direction.";
-      }
-      uses discards;
-    }
-  }
-
-  /*
-   * Main structure definition
-   */
-  list interface {
-    if-feature "per-interface-stats";
-    key "name";
-    description
-      "Indicates a list of interfaces for which packet discard reporting data is provided.";
-    leaf name {
-      type string;
-      description
-        "Indicates the name of the interface.";
-    }
-    uses interface;
-  }
-  container device {
-    if-feature "per-device-stats";
-    presence "Device-level statistics are available.";
-    description
-      "Device level packet counters.";
-    uses device;
-  }
-}
-
-&lt;CODE ENDS&gt;</pre><a href="#section-6-1" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="security">
-<section id="section-7">
-      <h2 id="name-security-considerations">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
-      </h2>
-<p id="section-7-1">This section discusses security considerations for both the information model and its implementation as a data model.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<div id="security-infomodel">
-<section id="section-7.1">
-        <h3 id="name-information-model-2">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-information-model-2" class="section-name selfRef">Information Model</a>
-        </h3>
-<p id="section-7.1-1">The information model defined in <a href="#infomodel-module" class="auto internal xref">Appendix A</a> specifies a YANG module using <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span> data extensions.  It defines a set of identities, types, and groupings. These nodes are intended to be reused by other YANG modules. The module by itself does not expose any data nodes that are writable, data nodes that contain read-only state, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="security-datamodel">
-<section id="section-7.2">
-        <h3 id="name-data-model-2">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-data-model-2" class="section-name selfRef">Data Model</a>
-        </h3>
-<p id="section-7.2-1">The YANG module specified in <a href="#datamodel-module" class="auto internal xref">Section 6</a> defines a schema for data with data nodes that contain read-only state.  It is designed to be accessed via network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>. The lowest NETCONF layer is the secure transport layer, and the mandatory-to-implement secure transport is Secure Shell (SSH) <span>[<a href="#RFC6242" class="cite xref">RFC6242</a>]</span>. The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement secure transport is TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
-<p id="section-7.2-2">The Network Configuration Access Control Model (NACM) <span>[<a href="#RFC8341" class="cite xref">RFC8341</a>]</span> provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
-<p id="section-7.2-3">The module does not expose any data nodes that are writable, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="iana">
-<section id="section-8">
-      <h2 id="name-iana-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
-      </h2>
-<p id="section-8-1">IANA is requested to register the following URI in the "ns" subregistry within the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:<a href="#section-8-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-2">
-<pre>
-   URI:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
-   Registrant Contact:  The IESG.
-   XML:  N/A; the requested URI is an XML namespace.
-</pre><a href="#section-8-2" class="pilcrow">¶</a>
-</div>
-<p id="section-8-3">IANA is requested to register the following YANG module in the "YANG Module
-   Names" subregistry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry:<a href="#section-8-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8-4">
-<pre>
-   Name:  ietf-packet-discard-reporting
-   Namespace:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
-   Prefix:  plr
-   Maintained by IANA?  N
-   Reference:  RFC XXXX
-</pre><a href="#section-8-4" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="contributors">
-<section id="section-9">
-      <h2 id="name-contributors">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-contributors" class="section-name selfRef">Contributors</a>
-      </h2>
-<div class="alignLeft art-text artwork" id="section-9-1">
-<pre>
-Nadav Chachmon
-Cisco Systems, Inc.
-170 West Tasman Dr.
-San Jose, CA 95134
-United States of America
-Email: nchachmo@cisco.com
-</pre><a href="#section-9-1" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="acknowledgements">
-<section id="section-10">
-      <h2 id="name-acknowledgments">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
-      </h2>
-<p id="section-10-1">The content of this document has benefitted from feedback from JR Rivers, Ronan Waide, Chris DeBruin, and Marcoz Sanz.<a href="#section-10-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="sec-combined-references">
-<section id="section-11">
-      <h2 id="name-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
-      </h2>
-<div id="sec-normative-references">
-<section id="section-11.1">
-        <h3 id="name-normative-references">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
-        </h3>
-<dl class="references">
-<dt id="RFC2119">[RFC2119]</dt>
-        <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC3688">[RFC3688]</dt>
-        <dd>
-<span class="refAuthor">Mealling, M.</span>, <span class="refTitle">"The IETF XML Registry"</span>, <span class="seriesInfo">BCP 81</span>, <span class="seriesInfo">RFC 3688</span>, <span class="seriesInfo">DOI 10.17487/RFC3688</span>, <time datetime="2004-01" class="refDate">January 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3688">https://www.rfc-editor.org/rfc/rfc3688</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6020">[RFC6020]</dt>
-        <dd>
-<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6020</span>, <span class="seriesInfo">DOI 10.17487/RFC6020</span>, <time datetime="2010-10" class="refDate">October 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6020">https://www.rfc-editor.org/rfc/rfc6020</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8174">[RFC8174]</dt>
-        <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8791">[RFC8791]</dt>
-      <dd>
-<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Björklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"YANG Data Structure Extensions"</span>, <span class="seriesInfo">RFC 8791</span>, <span class="seriesInfo">DOI 10.17487/RFC8791</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8791">https://www.rfc-editor.org/rfc/rfc8791</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-</dl>
-</section>
-</div>
-<div id="sec-informative-references">
-<section id="section-11.2">
-        <h3 id="name-informative-references">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
-        </h3>
-<dl class="references">
-<dt id="gMNI">[gMNI]</dt>
-        <dd>
-<span class="refAuthor">Marrow, C.</span>, <span class="refTitle">"gRPC Network Management Interface, IETF 98, March 2017, &lt;https://datatracker.ietf.org/meeting/98/materials/slides-98-rtgwg-gnmi-intro-draft-openconfig-rtgwg-gnmi-spec-00&gt;"</span>, <span>n.d.</span>. </dd>
-<dd class="break"></dd>
-<dt id="RED93">[RED93]</dt>
-        <dd>
-<span class="refAuthor">Jacobson, V.</span>, <span class="refTitle">"Random Early Detection gateways for Congestion Avoidance"</span>, <span>n.d.</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC1157">[RFC1157]</dt>
-        <dd>
-<span class="refAuthor">Case, J.</span>, <span class="refAuthor">Fedor, M.</span>, <span class="refAuthor">Schoffstall, M.</span>, and <span class="refAuthor">J. Davin</span>, <span class="refTitle">"Simple Network Management Protocol (SNMP)"</span>, <span class="seriesInfo">RFC 1157</span>, <span class="seriesInfo">DOI 10.17487/RFC1157</span>, <time datetime="1990-05" class="refDate">May 1990</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1157">https://www.rfc-editor.org/rfc/rfc1157</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC1213">[RFC1213]</dt>
-        <dd>
-<span class="refAuthor">McCloghrie, K.</span> and <span class="refAuthor">M. Rose</span>, <span class="refTitle">"Management Information Base for Network Management of TCP/IP-based internets: MIB-II"</span>, <span class="seriesInfo">STD 17</span>, <span class="seriesInfo">RFC 1213</span>, <span class="seriesInfo">DOI 10.17487/RFC1213</span>, <time datetime="1991-03" class="refDate">March 1991</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1213">https://www.rfc-editor.org/rfc/rfc1213</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC2475">[RFC2475]</dt>
-        <dd>
-<span class="refAuthor">Blake, S.</span>, <span class="refAuthor">Black, D.</span>, <span class="refAuthor">Carlson, M.</span>, <span class="refAuthor">Davies, E.</span>, <span class="refAuthor">Wang, Z.</span>, and <span class="refAuthor">W. Weiss</span>, <span class="refTitle">"An Architecture for Differentiated Services"</span>, <span class="seriesInfo">RFC 2475</span>, <span class="seriesInfo">DOI 10.17487/RFC2475</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2475">https://www.rfc-editor.org/rfc/rfc2475</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC3444">[RFC3444]</dt>
-        <dd>
-<span class="refAuthor">Pras, A.</span> and <span class="refAuthor">J. Schoenwaelder</span>, <span class="refTitle">"On the Difference between Information Models and Data Models"</span>, <span class="seriesInfo">RFC 3444</span>, <span class="seriesInfo">DOI 10.17487/RFC3444</span>, <time datetime="2003-01" class="refDate">January 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3444">https://www.rfc-editor.org/rfc/rfc3444</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6241">[RFC6241]</dt>
-        <dd>
-<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6242">[RFC6242]</dt>
-        <dd>
-<span class="refAuthor">Wasserman, M.</span>, <span class="refTitle">"Using the NETCONF Protocol over Secure Shell (SSH)"</span>, <span class="seriesInfo">RFC 6242</span>, <span class="seriesInfo">DOI 10.17487/RFC6242</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6242">https://www.rfc-editor.org/rfc/rfc6242</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7011">[RFC7011]</dt>
-        <dd>
-<span class="refAuthor">Claise, B., Ed.</span>, <span class="refAuthor">Trammell, B., Ed.</span>, and <span class="refAuthor">P. Aitken</span>, <span class="refTitle">"Specification of the IP Flow Information Export (IPFIX) Protocol for the Exchange of Flow Information"</span>, <span class="seriesInfo">STD 77</span>, <span class="seriesInfo">RFC 7011</span>, <span class="seriesInfo">DOI 10.17487/RFC7011</span>, <time datetime="2013-09" class="refDate">September 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7011">https://www.rfc-editor.org/rfc/rfc7011</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7270">[RFC7270]</dt>
-        <dd>
-<span class="refAuthor">Yourtchenko, A.</span>, <span class="refAuthor">Aitken, P.</span>, and <span class="refAuthor">B. Claise</span>, <span class="refTitle">"Cisco-Specific Information Elements Reused in IP Flow Information Export (IPFIX)"</span>, <span class="seriesInfo">RFC 7270</span>, <span class="seriesInfo">DOI 10.17487/RFC7270</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7270">https://www.rfc-editor.org/rfc/rfc7270</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8040">[RFC8040]</dt>
-        <dd>
-<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8289">[RFC8289]</dt>
-        <dd>
-<span class="refAuthor">Nichols, K.</span>, <span class="refAuthor">Jacobson, V.</span>, <span class="refAuthor">McGregor, A., Ed.</span>, and <span class="refAuthor">J. Iyengar, Ed.</span>, <span class="refTitle">"Controlled Delay Active Queue Management"</span>, <span class="seriesInfo">RFC 8289</span>, <span class="seriesInfo">DOI 10.17487/RFC8289</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8289">https://www.rfc-editor.org/rfc/rfc8289</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8340">[RFC8340]</dt>
-        <dd>
-<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8341">[RFC8341]</dt>
-        <dd>
-<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"Network Configuration Access Control Model"</span>, <span class="seriesInfo">STD 91</span>, <span class="seriesInfo">RFC 8341</span>, <span class="seriesInfo">DOI 10.17487/RFC8341</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8341">https://www.rfc-editor.org/rfc/rfc8341</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8343">[RFC8343]</dt>
-        <dd>
-<span class="refAuthor">Bjorklund, M.</span>, <span class="refTitle">"A YANG Data Model for Interface Management"</span>, <span class="seriesInfo">RFC 8343</span>, <span class="seriesInfo">DOI 10.17487/RFC8343</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8343">https://www.rfc-editor.org/rfc/rfc8343</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8446">[RFC8446]</dt>
-      <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-</dl>
-</section>
-</div>
-</section>
-</div>
 <div id="infomodel-module">
-<section id="appendix-A">
-      <h2 id="name-information-model-yang-modu">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-information-model-yang-modu" class="section-name selfRef">Information Model - YANG Module</a>
-      </h2>
-<p id="appendix-A-1">The "ietf-packet-discard-reporting" yang module uses the "sx" structure defined in <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<div class="breakable sourcecode" id="appendix-A-2">
+<section id="section-4.3">
+        <h3 id="name-information-model-yang-modu">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-information-model-yang-modu" class="section-name selfRef">Information Model - YANG Module</a>
+        </h3>
+<p id="section-4.3-1">The "ietf-packet-discard-reporting" module uses the "sx" structure defined in <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span>.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<div class="breakable sourcecode" id="section-4.3-2">
 <pre>&lt;CODE BEGINS&gt;
 module ietf-packet-discard-reporting-sx {
   yang-version 1.1;
@@ -3491,18 +2412,1120 @@ module ietf-packet-discard-reporting-sx {
   }
 }
 
-&lt;CODE ENDS&gt;</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+&lt;CODE ENDS&gt;</pre><a href="#section-4.3-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="datamodel">
+<section id="section-5">
+      <h2 id="name-data-model">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-data-model" class="section-name selfRef">Data Model</a>
+      </h2>
+<p id="section-5-1">This data model implements the information model defined in <a href="#infomodel" class="auto internal xref">Section 4</a> for the interface and device components.  This is classed as a Network Element model as defined by <span>[<a href="#RFC1157" class="cite xref">RFC1157</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="datamodel-structure">
+<section id="section-5.1">
+        <h3 id="name-structure-2">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-structure-2" class="section-name selfRef">Structure</a>
+        </h3>
+<p id="section-5.1-1">There is a direct mapping between the information model components and their data model implementations, with each component in the hierarchy represented by corresponding YANG containers and leaves.  The following YANG tree diagram shows the complete structure:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-2">
+<pre>
+module: ietf-packet-discard-reporting
+  +--rw interface* [name] {per-interface-stats}?
+  |  +--rw name        string
+  |  +--rw traffic* [direction]
+  |  |  +--rw direction    identityref
+  |  |  +--rw l2
+  |  |  |  +--rw frames?   uint64
+  |  |  |  +--rw bytes?    uint64
+  |  |  +--rw l3
+  |  |  |  +--rw address-family-stat* [address-family]
+  |  |  |     +--rw address-family    identityref
+  |  |  |     +--rw packets?          uint64
+  |  |  |     +--rw bytes?            uint64
+  |  |  |     +--rw unicast
+  |  |  |     |  +--rw packets?   uint64
+  |  |  |     |  +--rw bytes?     uint64
+  |  |  |     +--rw multicast
+  |  |  |        +--rw packets?   uint64
+  |  |  |        +--rw bytes?     uint64
+  |  |  +--rw qos!
+  |  |     +--rw class* [id]
+  |  |        +--rw id         string
+  |  |        +--rw packets?   uint64
+  |  |        +--rw bytes?     uint64
+  |  +--rw discards* [direction]
+  |     +--rw direction    identityref
+  |     +--rw l2
+  |     |  +--rw frames?   uint64
+  |     |  +--rw bytes?    uint64
+  |     +--rw l3
+  |     |  +--rw address-family-stat* [address-family]
+  |     |     +--rw address-family    identityref
+  |     |     +--rw packets?          uint64
+  |     |     +--rw bytes?            uint64
+  |     |     +--rw unicast
+  |     |     |  +--rw packets?   uint64
+  |     |     |  +--rw bytes?     uint64
+  |     |     +--rw multicast
+  |     |        +--rw packets?   uint64
+  |     |        +--rw bytes?     uint64
+  |     +--rw errors
+  |     |  +--rw l2
+  |     |  |  +--rw rx!
+  |     |  |  |  +--rw frames?          uint32
+  |     |  |  |  +--rw crc-error?       uint32
+  |     |  |  |  +--rw invalid-mac?     uint32
+  |     |  |  |  +--rw invalid-vlan?    uint32
+  |     |  |  |  +--rw invalid-frame?   uint32
+  |     |  |  +--rw tx!
+  |     |  |     +--rw frames?   uint32
+  |     |  +--rw l3
+  |     |  |  +--rw rx!
+  |     |  |  |  +--rw packets?          uint32
+  |     |  |  |  +--rw checksum-error?   uint32
+  |     |  |  |  +--rw mtu-exceeded?     uint32
+  |     |  |  |  +--rw invalid-packet?   uint32
+  |     |  |  +--rw ttl-expired?     uint32
+  |     |  |  +--rw no-route?        uint32
+  |     |  |  +--rw invalid-sid?     uint32
+  |     |  |  +--rw invalid-label?   uint32
+  |     |  |  +--rw tx!
+  |     |  |     +--rw packets?   uint32
+  |     |  +--rw internal
+  |     |     +--rw packets?        uint32
+  |     |     +--rw parity-error?   uint32
+  |     +--rw policy
+  |     |  +--rw l2
+  |     |  |  +--rw frames?   uint32
+  |     |  |  +--rw acl?      uint32
+  |     |  +--rw l3
+  |     |     +--rw packets?      uint32
+  |     |     +--rw acl?          uint32
+  |     |     +--rw policer
+  |     |     |  +--rw packets?   uint32
+  |     |     |  +--rw bytes?     uint32
+  |     |     +--rw null-route?   uint32
+  |     |     +--rw rpf?          uint32
+  |     |     +--rw ddos?         uint32
+  |     +--rw no-buffer
+  |        +--rw class* [id]
+  |           +--rw id         string
+  |           +--rw packets?   uint64
+  |           +--rw bytes?     uint64
+  +--rw device! {per-device-stats}?
+     +--rw traffic
+     |  +--rw l2
+     |  |  +--rw frames?   uint64
+     |  |  +--rw bytes?    uint64
+     |  +--rw l3
+     |  |  +--rw address-family-stat* [address-family]
+     |  |     +--rw address-family    identityref
+     |  |     +--rw packets?          uint64
+     |  |     +--rw bytes?            uint64
+     |  |     +--rw unicast
+     |  |     |  +--rw packets?   uint64
+     |  |     |  +--rw bytes?     uint64
+     |  |     +--rw multicast
+     |  |        +--rw packets?   uint64
+     |  |        +--rw bytes?     uint64
+     |  +--rw qos!
+     |     +--rw class* [id]
+     |        +--rw id         string
+     |        +--rw packets?   uint64
+     |        +--rw bytes?     uint64
+     +--rw discards
+        +--rw l2
+        |  +--rw frames?   uint64
+        |  +--rw bytes?    uint64
+        +--rw l3
+        |  +--rw address-family-stat* [address-family]
+        |     +--rw address-family    identityref
+        |     +--rw packets?          uint64
+        |     +--rw bytes?            uint64
+        |     +--rw unicast
+        |     |  +--rw packets?   uint64
+        |     |  +--rw bytes?     uint64
+        |     +--rw multicast
+        |        +--rw packets?   uint64
+        |        +--rw bytes?     uint64
+        +--rw errors
+        |  +--rw l2
+        |  |  +--rw rx!
+        |  |  |  +--rw frames?          uint32
+        |  |  |  +--rw crc-error?       uint32
+        |  |  |  +--rw invalid-mac?     uint32
+        |  |  |  +--rw invalid-vlan?    uint32
+        |  |  |  +--rw invalid-frame?   uint32
+        |  |  +--rw tx!
+        |  |     +--rw frames?   uint32
+        |  +--rw l3
+        |  |  +--rw rx!
+        |  |  |  +--rw packets?          uint32
+        |  |  |  +--rw checksum-error?   uint32
+        |  |  |  +--rw mtu-exceeded?     uint32
+        |  |  |  +--rw invalid-packet?   uint32
+        |  |  +--rw ttl-expired?     uint32
+        |  |  +--rw no-route?        uint32
+        |  |  +--rw invalid-sid?     uint32
+        |  |  +--rw invalid-label?   uint32
+        |  |  +--rw tx!
+        |  |     +--rw packets?   uint32
+        |  +--rw internal
+        |     +--rw packets?        uint32
+        |     +--rw parity-error?   uint32
+        +--rw policy
+        |  +--rw l2
+        |  |  +--rw frames?   uint32
+        |  |  +--rw acl?      uint32
+        |  +--rw l3
+        |     +--rw packets?      uint32
+        |     +--rw acl?          uint32
+        |     +--rw policer
+        |     |  +--rw packets?   uint32
+        |     |  +--rw bytes?     uint32
+        |     +--rw null-route?   uint32
+        |     +--rw rpf?          uint32
+        |     +--rw ddos?         uint32
+        +--rw no-buffer
+           +--rw class* [id]
+              +--rw id         string
+              +--rw packets?   uint64
+              +--rw bytes?     uint64
+</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="requirements">
+<section id="section-5.2">
+        <h3 id="name-implementation-requirements">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-implementation-requirements" class="section-name selfRef">Implementation Requirements</a>
+        </h3>
+<p id="section-5.2-1">The following requirements apply to the implementation of the data model and are intended to ensure consistent implementation across different vendors and platforms while allowing for platform-specific optimisations where needed.  While the model defines a comprehensive set of counters and statistics, implementations <span class="bcp14">MAY</span> support a subset of the defined features based on device capabilities and operational requirements. However, implementations <span class="bcp14">MUST</span> clearly document which features are supported and how they map to the model.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Requirements 1-10 relate to packets forwarded or discarded by the device, while requirement 11 relates to packets destined for or originating from the device:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.2-3">
+<li id="section-5.2-3.1">
+            <p id="section-5.2-3.1.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">MUST</span> be accounted for.<a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.2">
+            <p id="section-5.2-3.2.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">SHOULD</span> be attributed to the physical or logical interface of the device where they occur.  Where they cannot be attributed to the interface, they <span class="bcp14">MUST</span> be attributed to the device.<a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.3">
+            <p id="section-5.2-3.3.1">An individual frame <span class="bcp14">MUST</span> only be accounted for by either the Layer 2 traffic class or the Layer 2 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.4">
+            <p id="section-5.2-3.4.1">An individual packet <span class="bcp14">MUST</span> only be accounted for by either the Layer 3 traffic class or the Layer 3 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.5">
+            <p id="section-5.2-3.5.1">A frame accounted for at Layer 2 <span class="bcp14">SHOULD NOT</span> be accounted for at Layer 3 and vice versa.  An implementation <span class="bcp14">MUST</span> indicate which layers traffic and discards are counted against.  This is to avoid double counting.<a href="#section-5.2-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.6">
+            <p id="section-5.2-3.6.1">The aggregate Layer 2 and Layer 3 traffic and discard classes <span class="bcp14">SHOULD</span> account for all underlying frames or packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.7">
+            <p id="section-5.2-3.7.1">The aggregate Quality of Service (QoS) traffic and no buffer discard classes <span class="bcp14">MUST</span> account for all underlying packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.8">
+            <p id="section-5.2-3.8.1">In addition to the Layer 2 and Layer 3 aggregate classes, an individual discarded packet <span class="bcp14">MUST</span> only account against a single error, policy, or no-buffer discard subclass.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.9">
+            <p id="section-5.2-3.9.1">When there are multiple reasons for discarding a packet, the ordering of discard class reporting <span class="bcp14">MUST</span> be defined.<a href="#section-5.2-3.9.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.10">
+            <p id="section-5.2-3.10.1">If Diffserv <span>[<a href="#RFC2475" class="cite xref">RFC2475</a>]</span> is not used, no-buffer discards <span class="bcp14">SHOULD</span> be reported as class0, which represents the default class.<a href="#section-5.2-3.10.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.11">
+            <p id="section-5.2-3.11.1">Traffic to the device control plane has its own class, however, traffic from the device control plane <span class="bcp14">SHOULD</span> be accounted for in the same way as other egress traffic.<a href="#section-5.2-3.11.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+</section>
+</div>
+<div id="examples">
+<section id="section-5.3">
+        <h3 id="name-usage-examples">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-usage-examples" class="section-name selfRef">Usage Examples</a>
+        </h3>
+<p id="section-5.3-1">If all of the requirements are met, a "good" unicast IPv4 packet received would increment:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">interface/ingress/traffic/l3/v4/unicast/packets<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1">interface/ingress/traffic/l3/v4/unicast/bytes<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.3">
+            <p id="section-5.3-2.3.1">interface/ingress/traffic/qos/class_0/packets<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.4">
+            <p id="section-5.3-2.4.1">interface/ingress/traffic/qos/class_0/bytes<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-3">A received unicast IPv6 packet discarded due to Hop Limit expiry would increment:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-4.1">
+            <p id="section-5.3-4.1.1">interface/ingress/discards/l3/v6/unicast/packets<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-4.2">
+            <p id="section-5.3-4.2.1">interface/ingress/discards/l3/v6/unicast/bytes<a href="#section-5.3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-4.3">
+            <p id="section-5.3-4.3.1">interface/ingress/discards/l3/rx/ttl-expired/packets<a href="#section-5.3-4.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-5">An IPv4 packet discarded on egress due to no buffers would increment:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-6.1">
+            <p id="section-5.3-6.1.1">interface/egress/discards/l3/v4/unicast/packets<a href="#section-5.3-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.2">
+            <p id="section-5.3-6.2.1">interface/egress/discards/l3/v4/unicast/bytes<a href="#section-5.3-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.3">
+            <p id="section-5.3-6.3.1">interface/egress/discards/no-buffer/class_0/packets<a href="#section-5.3-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.4">
+            <p id="section-5.3-6.4.1">interface/egress/discards/no-buffer/class_0/bytes<a href="#section-5.3-6.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-7">A multicast IPv6 packet dropped due to RPF check failure would increment:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-8.1">
+            <p id="section-5.3-8.1.1">interface/ingress/discards/l3/v6/multicast/packets<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-8.2">
+            <p id="section-5.3-8.2.1">interface/ingress/discards/l3/v6/multicast/bytes<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-8.3">
+            <p id="section-5.3-8.3.1">interface/ingress/discards/policy/l3/rpf/packets<a href="#section-5.3-8.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="datamodel-module">
+<section id="section-6">
+      <h2 id="name-data-model-yang-module">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-data-model-yang-module" class="section-name selfRef">Data model - YANG Module</a>
+      </h2>
+<div class="breakable sourcecode" id="section-6-1">
+<pre>&lt;CODE BEGINS&gt;
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+module ietf-packet-discard-reporting {
+  yang-version 1.1;
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting";
+  prefix plr;
+
+  organization
+    "IETF OPSAWG (Operations and Management Area Working Group)";
+  contact
+    "WG Web:   https://datatracker.ietf.org/wg/opsawg/
+     WG List:  mailto:opsawg@ietf.org
+
+     Author:   John Evans
+               &lt;mailto:jevanamz@amazon.co.uk&gt;
+
+     Author:   Oleksandr Pylypenko
+               &lt;mailto:opyl@amazon.com&gt;
+
+     Author:   Jeffrey Haas
+               &lt;mailto:jhaas@juniper.net&gt;
+
+     Author:   Aviran Kadosh
+               &lt;mailto:akadosh@cisco.com&gt;
+
+     Author:   Mohamed Boucadair
+               &lt;mailto:mohamed.boucadair@orange.com&gt;";
+  description
+    "This module defines an information model for packet discard
+     reporting.
+
+     Copyright (c) 2024 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Revised BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see the
+     RFC itself for full legal notices.";
+
+  revision 2024-06-04 {
+    description
+      "Initial revision.";
+    reference
+      "RFC XXXX: An Information Model for Packet Discard Reporting";
+  }
+
+  /*
+   * Features
+   */
+
+  feature per-interface-stats {
+    description
+      "Per-interface statistics are available on this device";
+  }
+
+  feature per-device-stats {
+    description
+      "Global device statistics are available on this device";
+  }
+
+  /*
+   * Identities
+   */
+
+  identity direction {
+    description
+      "Defines a direction for the reported statistics";
+  }
+
+  identity ingress {
+    base direction;
+    description
+      "Reports statistics for the received from the network packets";
+  }
+
+  identity egress {
+    base direction;
+    description
+      "Reports statistics for the sent to the network packets";
+  }
+
+  identity address-family {
+    description
+      "Defines a type for the address family.";
+  }
+
+  identity ipv4 {
+    base address-family;
+    description
+      "Identity for an IPv4 address family.";
+  }
+
+  identity ipv6 {
+    base address-family;
+    description
+      "Identity for an IPv6 address family.";
+  }
+
+  identity all {
+    base address-family;
+    description
+      "Identity for all address families.";
+  }
+
+  /*
+   * Groupings
+   */
+
+  grouping basic-packets-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint64;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet and byte counters.";
+    uses basic-packets-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint64;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame and byte counters.";
+    uses basic-frames-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping basic-packets-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint32;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet and byte counters.";
+    uses basic-packets-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint32;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame and byte counters.";
+    uses basic-frames-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping l2-traffic {
+    description
+      "Layer 2 traffic counters.";
+    uses basic-frames-bytes-64;
+  }
+
+  grouping ip {
+    description
+      "Layer 3 traffic counters per address family.";
+    list address-family-stat {
+      key "address-family";
+      description
+        "Reports per address family traffic counters.";
+      leaf address-family {
+        type identityref {
+          base address-family;
+        }
+        description
+          "Specifies an address family.";
+      }
+      uses basic-packets-bytes-64;
+      container unicast {
+        description
+          "Unicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+      container multicast {
+        description
+          "Multicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+    }
+  }
+
+  grouping l3-traffic {
+    description
+      "Layer 3 traffic counters.";
+    uses ip;
+  }
+
+  grouping qos {
+    description
+      "Quality of Service (QoS) traffic counters.";
+    list class {
+      key "id";
+      min-elements 1;
+      description
+        "QoS class traffic counters.";
+      leaf id {
+        type string;
+        description
+          "QoS class identifier.";
+      }
+      uses basic-packets-bytes-64;
+    }
+  }
+
+  grouping traffic {
+    description
+      "All traffic counters.";
+    container l2 {
+      description
+        "Layer 2 traffic counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Layer 3 traffic counters.";
+      uses l3-traffic;
+    }
+    container qos {
+      presence "Qos reporting is enabled";
+      description
+        "QoS traffic counters.";
+      uses qos;
+    }
+  }
+
+  grouping errors-l2-rx {
+    description
+      "Layer 2 ingress frame error discard counters.";
+    container rx {
+      presence "rx";
+      description
+        "Layer 2 ingress frame receive error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of frames discarded due to errors with the \
+                                                    received frame.";
+      }
+      leaf crc-error {
+        type uint32;
+        description
+          "The number of frames discarded due to CRC error.";
+      }
+      leaf invalid-mac {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid MAC \
+                                                           address.";
+      }
+      leaf invalid-vlan {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid VLAN tag\
+                                                                  .";
+      }
+      leaf invalid-frame {
+        type uint32;
+        description
+          "The number of invalid frames discarded due to other \
+  reasons, not limited to: malformed frames, frame-size violations.";
+      }
+    }
+  }
+
+  grouping errors-l3-rx {
+    description
+      "Layer 3 ingress packet error discard counters.";
+    container rx {
+      presence "rx";
+      description
+        "Layer 3 ingress packet receive error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors in \
+                                               the received packet.";
+      }
+      leaf checksum-error {
+        type uint32;
+        description
+          "The number of received packets discarded due to a \
+                                                    checksum error.";
+      }
+      leaf mtu-exceeded {
+        type uint32;
+        description
+          "The number of received packets discarded due to MTU \
+                                                          exceeded.";
+      }
+      leaf invalid-packet {
+        type uint32;
+        description
+          "The number of invalid packets discarded due to other \
+reasons, not limited to: invalid packet length, invalid header \
+fields, invalid options, invalid protocol version, invalid flags or \
+                                   control bits, malformed packets.";
+      }
+    }
+    leaf ttl-expired {
+      type uint32;
+      description
+        "The number of received packets discarded due to expired TTL\
+                                                                  .";
+    }
+    leaf no-route {
+      type uint32;
+      description
+        "The number of packets discarded due to not matching a \
+                                                       valid route.";
+    }
+    leaf invalid-sid {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid Segment \
+                                                  Routing (SR) SID.";
+    }
+    leaf invalid-label {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid MPLS \
+                                                             label.";
+    }
+  }
+
+  grouping errors-l3-int {
+    description
+      "Internal error discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of packets discarded due to internal errors.";
+    }
+    leaf parity-error {
+      type uint32;
+      description
+        "The number of packets discarded due to parity errors.";
+    }
+  }
+
+  grouping errors-l2-tx {
+    description
+      "Layer 2 transmit error discard counters.";
+    container tx {
+      presence "tx";
+      description
+        "Layer 2 transmit frame error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of Layer 2 frames discarded due to errors \
+                                                 when transmitting.";
+      }
+    }
+  }
+
+  grouping errors-l3-tx {
+    description
+      "Layer 3 transmit error discard counters.";
+    container tx {
+      presence "tx";
+      description
+        "Layer 3 transmit packet error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors \
+                                                 when transmitting.";
+      }
+    }
+  }
+
+  grouping errors {
+    description
+      "Error discard counters.";
+    container l2 {
+      description
+        "Layer 2 frame error discard counters.";
+      uses errors-l2-rx;
+      uses errors-l2-tx;
+    }
+    container l3 {
+      description
+        "Layer 3 packet error discard counters.";
+      uses errors-l3-rx;
+      uses errors-l3-tx;
+    }
+    container internal {
+      description
+        "Internal error discard counters.";
+      uses errors-l3-int;
+    }
+  }
+
+  grouping policy-l2 {
+    description
+      "Layer 2 policy frame discard counters.";
+    leaf frames {
+      type uint32;
+      description
+        "The number of Layer 2 frames discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of frames discarded due to Layer 2 ACLs.";
+    }
+  }
+
+  grouping policy-l3 {
+    description
+      "Layer 3 policy packet discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of Layer 3 packets discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of packets discarded due to Layer 3 ACLs.";
+    }
+    container policer {
+      description
+        "The number of packets discarded due ingress policer \
+                                                        violations.";
+      uses basic-packets-bytes-32;
+    }
+    leaf null-route {
+      type uint32;
+      description
+        "The number of packets discarded due to matching a null \
+                                                             route.";
+    }
+    leaf rpf {
+      type uint32;
+      description
+        "The number of packets discarded due to failing Reverse \
+                                       Path Forwarding (RPF) check.";
+    }
+    leaf ddos {
+      type uint32;
+      description
+        "The number of packets discarded due to DDoS protection \
+                                                          policies.";
+    }
+  }
+
+  grouping discards {
+    description
+      "Discard counters.";
+    container l2 {
+      description
+        "Ingress Layer 2 frame discard counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Ingress Layer 3 packet discard counters.";
+      uses l3-traffic;
+    }
+    container errors {
+      description
+        "Ingress error discard counters.";
+      uses errors;
+    }
+    container policy {
+      description
+        "Ingress policy-related discard counters.";
+      uses policy;
+    }
+    container no-buffer {
+      description
+        "Ingress discard counters due to buffer
+         unavailability.";
+      uses qos;
+    }
+  }
+
+  grouping policy {
+    description
+      "Policy-related discard counters.";
+    container l2 {
+      description
+        "Layer 2 policy frame discard counters.";
+      uses policy-l2;
+    }
+    container l3 {
+      description
+        "Layer 3 policy packet discard counters.";
+      uses policy-l3;
+    }
+  }
+
+  grouping device {
+    description
+      "Device-level traffic and discard counters.";
+    container traffic {
+      description
+        "Traffic counters.";
+      uses traffic;
+    }
+    container discards {
+      description "Discard counters.";
+      uses discards;
+    }
+  }
+
+  grouping interface {
+    description
+      "Interface-level traffic and discard counters.";
+    list traffic {
+      key "direction";
+      description
+        "Traffic counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses traffic;
+    }
+    list discards {
+      key "direction";
+      description
+        "Discard counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses discards;
+    }
+  }
+
+  /*
+   * Main structure definition
+   */
+  list interface {
+    if-feature "per-interface-stats";
+    key "name";
+    description
+      "Indicates a list of interfaces for which packet discard \
+                                        reporting data is provided.";
+    leaf name {
+      type string;
+      description
+        "Indicates the name of the interface.";
+    }
+    uses interface;
+  }
+  container device {
+    if-feature "per-device-stats";
+    presence "Device-level statistics are available.";
+    description
+      "Device level packet counters.";
+    uses device;
+  }
+}
+
+&lt;CODE ENDS&gt;</pre><a href="#section-6-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="security">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">This section discusses security considerations for both the information model and its implementation as a data model.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="security-infomodel">
+<section id="section-7.1">
+        <h3 id="name-information-model-2">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-information-model-2" class="section-name selfRef">Information Model</a>
+        </h3>
+<p id="section-7.1-1">The information model defined in <a href="#infomodel-module" class="auto internal xref">Section 4.3</a> specifies a YANG module using <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span> data extensions.  It defines a set of identities, types, and groupings. These nodes are intended to be reused by other YANG modules. The module by itself does not expose any data nodes that are writable, data nodes that contain read-only state, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-datamodel">
+<section id="section-7.2">
+        <h3 id="name-data-model-2">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-data-model-2" class="section-name selfRef">Data Model</a>
+        </h3>
+<p id="section-7.2-1">The YANG module specified in <a href="#datamodel-module" class="auto internal xref">Section 6</a> defines a schema for data with data nodes that contain read-only state.  It is designed to be accessed via network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>. The lowest NETCONF layer is the secure transport layer, and the mandatory-to-implement secure transport is Secure Shell (SSH) <span>[<a href="#RFC6242" class="cite xref">RFC6242</a>]</span>. The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement secure transport is TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">The Network Configuration Access Control Model (NACM) <span>[<a href="#RFC8341" class="cite xref">RFC8341</a>]</span> provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">The module does not expose any data nodes that are writable, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">IANA is requested to register the following URI in the "ns" subregistry within the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-2">
+<pre>
+   URI:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
+   Registrant Contact:  The IESG.
+   XML:  N/A; the requested URI is an XML namespace.
+</pre><a href="#section-8-2" class="pilcrow">¶</a>
+</div>
+<p id="section-8-3">IANA is requested to register the following YANG module in the "YANG Module
+   Names" subregistry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry:<a href="#section-8-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-4">
+<pre>
+   Name:  ietf-packet-discard-reporting
+   Namespace:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
+   Prefix:  plr
+   Maintained by IANA?  N
+   Reference:  RFC XXXX
+</pre><a href="#section-8-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="contributors">
+<section id="section-9">
+      <h2 id="name-contributors">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-contributors" class="section-name selfRef">Contributors</a>
+      </h2>
+<div class="alignLeft art-text artwork" id="section-9-1">
+<pre>
+Nadav Chachmon
+Cisco Systems, Inc.
+170 West Tasman Dr.
+San Jose, CA 95134
+United States of America
+Email: nchachmo@cisco.com
+</pre><a href="#section-9-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="section-10">
+      <h2 id="name-acknowledgments">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="section-10-1">The content of this document has benefitted from feedback from JR Rivers, Ronan Waide, Chris DeBruin, and Marcoz Sanz.<a href="#section-10-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-11">
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3688">[RFC3688]</dt>
+        <dd>
+<span class="refAuthor">Mealling, M.</span>, <span class="refTitle">"The IETF XML Registry"</span>, <span class="seriesInfo">BCP 81</span>, <span class="seriesInfo">RFC 3688</span>, <span class="seriesInfo">DOI 10.17487/RFC3688</span>, <time datetime="2004-01" class="refDate">January 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3688">https://www.rfc-editor.org/rfc/rfc3688</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6020">[RFC6020]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6020</span>, <span class="seriesInfo">DOI 10.17487/RFC6020</span>, <time datetime="2010-10" class="refDate">October 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6020">https://www.rfc-editor.org/rfc/rfc6020</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8791">[RFC8791]</dt>
+      <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Björklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"YANG Data Structure Extensions"</span>, <span class="seriesInfo">RFC 8791</span>, <span class="seriesInfo">DOI 10.17487/RFC8791</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8791">https://www.rfc-editor.org/rfc/rfc8791</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="gMNI">[gMNI]</dt>
+        <dd>
+<span class="refAuthor">Marrow, C.</span>, <span class="refTitle">"gRPC Network Management Interface, IETF 98, March 2017, &lt;https://datatracker.ietf.org/meeting/98/materials/slides-98-rtgwg-gnmi-intro-draft-openconfig-rtgwg-gnmi-spec-00&gt;"</span>, <span>n.d.</span>. </dd>
+<dd class="break"></dd>
+<dt id="RED93">[RED93]</dt>
+        <dd>
+<span class="refAuthor">Jacobson, V.</span>, <span class="refTitle">"Random Early Detection gateways for Congestion Avoidance"</span>, <span>n.d.</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1157">[RFC1157]</dt>
+        <dd>
+<span class="refAuthor">Case, J.</span>, <span class="refAuthor">Fedor, M.</span>, <span class="refAuthor">Schoffstall, M.</span>, and <span class="refAuthor">J. Davin</span>, <span class="refTitle">"Simple Network Management Protocol (SNMP)"</span>, <span class="seriesInfo">RFC 1157</span>, <span class="seriesInfo">DOI 10.17487/RFC1157</span>, <time datetime="1990-05" class="refDate">May 1990</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1157">https://www.rfc-editor.org/rfc/rfc1157</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1213">[RFC1213]</dt>
+        <dd>
+<span class="refAuthor">McCloghrie, K.</span> and <span class="refAuthor">M. Rose</span>, <span class="refTitle">"Management Information Base for Network Management of TCP/IP-based internets: MIB-II"</span>, <span class="seriesInfo">STD 17</span>, <span class="seriesInfo">RFC 1213</span>, <span class="seriesInfo">DOI 10.17487/RFC1213</span>, <time datetime="1991-03" class="refDate">March 1991</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1213">https://www.rfc-editor.org/rfc/rfc1213</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2475">[RFC2475]</dt>
+        <dd>
+<span class="refAuthor">Blake, S.</span>, <span class="refAuthor">Black, D.</span>, <span class="refAuthor">Carlson, M.</span>, <span class="refAuthor">Davies, E.</span>, <span class="refAuthor">Wang, Z.</span>, and <span class="refAuthor">W. Weiss</span>, <span class="refTitle">"An Architecture for Differentiated Services"</span>, <span class="seriesInfo">RFC 2475</span>, <span class="seriesInfo">DOI 10.17487/RFC2475</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2475">https://www.rfc-editor.org/rfc/rfc2475</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3444">[RFC3444]</dt>
+        <dd>
+<span class="refAuthor">Pras, A.</span> and <span class="refAuthor">J. Schoenwaelder</span>, <span class="refTitle">"On the Difference between Information Models and Data Models"</span>, <span class="seriesInfo">RFC 3444</span>, <span class="seriesInfo">DOI 10.17487/RFC3444</span>, <time datetime="2003-01" class="refDate">January 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3444">https://www.rfc-editor.org/rfc/rfc3444</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6241">[RFC6241]</dt>
+        <dd>
+<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6242">[RFC6242]</dt>
+        <dd>
+<span class="refAuthor">Wasserman, M.</span>, <span class="refTitle">"Using the NETCONF Protocol over Secure Shell (SSH)"</span>, <span class="seriesInfo">RFC 6242</span>, <span class="seriesInfo">DOI 10.17487/RFC6242</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6242">https://www.rfc-editor.org/rfc/rfc6242</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7011">[RFC7011]</dt>
+        <dd>
+<span class="refAuthor">Claise, B., Ed.</span>, <span class="refAuthor">Trammell, B., Ed.</span>, and <span class="refAuthor">P. Aitken</span>, <span class="refTitle">"Specification of the IP Flow Information Export (IPFIX) Protocol for the Exchange of Flow Information"</span>, <span class="seriesInfo">STD 77</span>, <span class="seriesInfo">RFC 7011</span>, <span class="seriesInfo">DOI 10.17487/RFC7011</span>, <time datetime="2013-09" class="refDate">September 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7011">https://www.rfc-editor.org/rfc/rfc7011</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7270">[RFC7270]</dt>
+        <dd>
+<span class="refAuthor">Yourtchenko, A.</span>, <span class="refAuthor">Aitken, P.</span>, and <span class="refAuthor">B. Claise</span>, <span class="refTitle">"Cisco-Specific Information Elements Reused in IP Flow Information Export (IPFIX)"</span>, <span class="seriesInfo">RFC 7270</span>, <span class="seriesInfo">DOI 10.17487/RFC7270</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7270">https://www.rfc-editor.org/rfc/rfc7270</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8040">[RFC8040]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8289">[RFC8289]</dt>
+        <dd>
+<span class="refAuthor">Nichols, K.</span>, <span class="refAuthor">Jacobson, V.</span>, <span class="refAuthor">McGregor, A., Ed.</span>, and <span class="refAuthor">J. Iyengar, Ed.</span>, <span class="refTitle">"Controlled Delay Active Queue Management"</span>, <span class="seriesInfo">RFC 8289</span>, <span class="seriesInfo">DOI 10.17487/RFC8289</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8289">https://www.rfc-editor.org/rfc/rfc8289</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8340">[RFC8340]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8341">[RFC8341]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"Network Configuration Access Control Model"</span>, <span class="seriesInfo">STD 91</span>, <span class="seriesInfo">RFC 8341</span>, <span class="seriesInfo">DOI 10.17487/RFC8341</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8341">https://www.rfc-editor.org/rfc/rfc8341</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8343">[RFC8343]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M.</span>, <span class="refTitle">"A YANG Data Model for Interface Management"</span>, <span class="seriesInfo">RFC 8343</span>, <span class="seriesInfo">DOI 10.17487/RFC8343</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8343">https://www.rfc-editor.org/rfc/rfc8343</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
 </div>
 <div id="wheredropped">
-<section id="appendix-A.1">
-        <h3 id="name-where-do-packets-get-droppe">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-where-do-packets-get-droppe" class="section-name selfRef">Where do packets get dropped?</a>
-        </h3>
-<p id="appendix-A.1-1">Understanding where packets are discarded in a network device is essential for interpreting discard signals and determining appropriate mitigation actions.  <a href="#ex-drop" class="auto internal xref">Figure 1</a> depicts an example of where and why packets may be discarded in a typical single-ASIC, shared-buffered type device. While actual device architectures vary between vendors and platforms, with some using multiple ASICs, distributed forwarding, or different buffering architectures, this example illustrates the common processing stages where packets may be dropped. The logical model for classifying and reporting discards remains consistent regardless of the underlying hardware architecture.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1-2">Packets ingress on the left and egress on the right:<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<section id="appendix-A">
+      <h2 id="name-where-do-packets-get-droppe">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-where-do-packets-get-droppe" class="section-name selfRef">Where do packets get dropped?</a>
+      </h2>
+<p id="appendix-A-1">Understanding where packets are discarded in a network device is essential for interpreting discard signals and determining appropriate mitigation actions.  <a href="#ex-drop" class="auto internal xref">Figure 1</a> depicts an example of where and why packets may be discarded in a typical single-ASIC, shared-buffered type device. While actual device architectures vary between vendors and platforms, with some using multiple ASICs, distributed forwarding, or different buffering architectures, this example illustrates the common processing stages where packets may be dropped. The logical model for classifying and reporting discards remains consistent regardless of the underlying hardware architecture.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-2">Packets ingress on the left and egress on the right:<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <span id="name-example-of-where-packets-ge"></span><div id="ex-drop">
 <figure id="figure-1">
-          <div class="alignLeft art-text artwork" id="appendix-A.1-3.1">
+        <div class="alignLeft art-text artwork" id="appendix-A-3.1">
 <pre>
 
                                                       +----------+
@@ -3535,11 +3558,9 @@ Unintended                 error/rx/l2   error/l3/rx   no-buffer     error/l3/tx
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
 <a href="#name-example-of-where-packets-ge" class="selfRef">Example of where packets get dropped</a>
-          </figcaption></figure>
+        </figcaption></figure>
 </div>
-<p id="appendix-A.1-4">See Appendix C for examples of how these discard signals map to root causes and mitigation actions.<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
-</section>
-</div>
+<p id="appendix-A-4">See Appendix C for examples of how these discard signals map to root causes and mitigation actions.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mapping">
