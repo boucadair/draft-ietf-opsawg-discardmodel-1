@@ -1,0 +1,3747 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Information and Data Models for Packet Discard Reporting</title>
+<meta content="John Evans" name="author">
+<meta content="Oleksandr Pylypenko" name="author">
+<meta content="Jeffrey Haas" name="author">
+<meta content="Aviran Kadosh" name="author">
+<meta content="Mohamed Boucadair" name="author">
+<meta content="
+       This document defines an information model and corresponding data model for packet discard reporting. The information model provides an implementation-independent framework for classifying packet loss to enable automated network mitigation of unintended packet loss.  The data model specifies a YANG implementation of this framework for network elements. 
+    " name="description">
+<meta content="xml2rfc 3.28.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-ietf-opsawg-discardmodel-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.28.0
+    Python 3.12.9
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.5
+    lxml 5.3.0
+    platformdirs 4.3.6
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.3
+    setuptools 70.3.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-opsawg-discardmodel.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+}
+dl:not(.dlNewline) > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+}
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* Comments */
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:is(:link, :focus, :hover),
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin: 2px 0.5em 0;
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">IM and DM for Packet Discard Reporting</td>
+<td class="right">February 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Evans, et al.</td>
+<td class="center">Expires 31 August 2025</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Operations and Management Area Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-opsawg-discardmodel-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-02-27" class="published">27 February 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2025-08-31">31 August 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. Evans</div>
+<div class="org">Amazon</div>
+</div>
+<div class="author">
+      <div class="author-name">O. Pylypenko</div>
+<div class="org">Amazon</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Haas</div>
+<div class="org">Juniper Networks</div>
+</div>
+<div class="author">
+      <div class="author-name">A. Kadosh</div>
+<div class="org">Cisco Systems, Inc.</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Boucadair</div>
+<div class="org">Orange</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Information and Data Models for Packet Discard Reporting</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines an information model and corresponding data model for packet discard reporting. The information model provides an implementation-independent framework for classifying packet loss to enable automated network mitigation of unintended packet loss.  The data model specifies a YANG implementation of this framework for network elements.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://o-pylypenko.github.io/draft-ietf-opsawg-discardmodel/draft-ietf-opsawg-discardmodel.html">https://o-pylypenko.github.io/draft-ietf-opsawg-discardmodel/draft-ietf-opsawg-discardmodel.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-opsawg-discardmodel/">https://datatracker.ietf.org/doc/draft-ietf-opsawg-discardmodel/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Operations and Management Area Working Group  mailing list (<span><a href="mailto:opsawg@ietf.org">mailto:opsawg@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/opsawg/">https://mailarchive.ietf.org/arch/browse/opsawg/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/opsawg/">https://www.ietf.org/mailman/listinfo/opsawg/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/o-pylypenko/draft-ietf-opsawg-discardmodel">https://github.com/o-pylypenko/draft-ietf-opsawg-discardmodel</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 31 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-problem-statement" class="internal xref">Problem Statement</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-information-model" class="internal xref">Information Model</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-structure" class="internal xref">Structure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-sub-type-definitions" class="internal xref">Sub-type Definitions</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-data-model" class="internal xref">Data Model</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-structure-2" class="internal xref">Structure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-implementation-requirements" class="internal xref">Implementation Requirements</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-usage-examples" class="internal xref">Usage Examples</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-data-model-yang-module" class="internal xref">Data model - YANG Module</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-information-model-2" class="internal xref">Information Model</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-data-model-2" class="internal xref">Data Model</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-contributors" class="internal xref">Contributors</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-information-model-yang-modu" class="internal xref">Information Model - YANG Module</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-where-do-packets-get-droppe" class="internal xref">Where do packets get dropped?</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-example-signal-to-mitigatio" class="internal xref">Example signal-to-mitigation action mapping</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-implementation-experience" class="internal xref">Implementation Experience</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The primary function of a network is to transport and deliver packets according to service level objectives. For network operators, understanding both where and why packet loss occurs within a network is essential for effective operation. Device-reported packet loss provides the most direct signal for identifying service impact. While certain types of packet loss, such as policy-based discards, are intentional and part of normal network operation, unintended packet loss can impact customer services.  To automate network operations, operators must be able to detect customer-impacting packet loss, determine its root cause, and apply appropriate mitigation actions. Precise classification of packet loss is crucial to ensure that anomalous packet loss is easily detected and that the right action is taken to mitigate the impact. Taking the wrong action can make problems worse; for example, removing a congested device from service can exacerbate congestion by redirecting traffic to other already congested links or devices.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Existing metrics for reporting packet loss, such as ifInDiscards, ifOutDiscards, ifInErrors, and ifOutErrors defined in MIB-II <span>[<a href="#RFC1213" class="cite xref">RFC1213</a>]</span> and the YANG Data Model for Interface Management <span>[<a href="#RFC8343" class="cite xref">RFC8343</a>]</span>, are insufficient for automating network operations.  First, they lack precision; for instance, ifInDiscards aggregates all discarded inbound packets without specifying the cause, making it challenging to distinguish between intended and unintended discards. Second, these definitions are ambiguous, leading to inconsistent vendor implementations. For example, in some implementations ifInErrors accounts only for errored packets that are dropped, while in others, it includes all errored packets, whether they are dropped or not. Many implementations support more discard metrics than these, however, they have been inconsistently implemented due to the lack of a standardised classification scheme and clear semantics for packet loss reporting. For example, <span>[<a href="#RFC7270" class="cite xref">RFC7270</a>]</span> provides support for reporting discards per flow in IPFIX using forwardingStatus, however, the defined drop reason codes also lack sufficient clarity to facilitate automated root cause analysis and impact mitigation, e.g., the "For us" reason code.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document defines an information model and corresponding data model for packet loss reporting which address these issues.  The information model provides precise classification of packet loss to enable accurate automated mitigation.  The data model specifies a YANG implementation of this framework for network elements, while maintaining consistency through clear semantics.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The scope of this document is limited to reporting packet loss at Layer 3 and frames discarded at Layer 2. This document considers only the signals that may trigger automated mitigation actions and not how the actions are defined or executed.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5"><a href="#problem" class="auto internal xref">Section 3</a> describes the problem space and requirements. <a href="#infomodel" class="auto internal xref">Section 4</a> defines the information model and classification scheme. <a href="#datamodel" class="auto internal xref">Section 5</a> specifies the corresponding data model and implementation requirements together with a set of usage examples. <a href="#datamodel-module" class="auto internal xref">Section 6</a> provides the complete YANG module definition for the data model. The appendices provide the  YANG module definition for the information model, together with additional context and implementation guidance.<a href="#section-1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">A packet discard accounts for any instance where a packet is dropped by a device, regardless of whether the discard was intentional or unintentional.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">Intended discards are packets dropped due to deliberate network policies or configurations designed to enforce security or quality of service. For example, packets dropped because they match an Access Control List (ACL) denying certain traffic types.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Unintended discards are packets that were dropped, which the network operator otherwise intended to deliver, i.e. which indicates an error state.  There are many possible reasons for unintended packet loss, including: erroring links may corrupt packets in transit; incorrect routing tables may result in packets being dropped because they do not match a valid route; configuration errors may result in a valid packet incorrectly matching an ACL and being dropped.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Tree diagrams used in this document follow the notation defined in <span>[<a href="#RFC8340" class="cite xref">RFC8340</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="problem">
+<section id="section-3">
+      <h2 id="name-problem-statement">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-problem-statement" class="section-name selfRef">Problem Statement</a>
+      </h2>
+<p id="section-3-1">The fundamental problem for network operators is how to automatically detect when unintended packet loss is occurring and determine the appropriate action to mitigate it. For any network there are a small set of potential actions that can be taken to mitigate customer impact when unintended packet loss is detected:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3-2">
+<li id="section-3-2.1">
+          <p id="section-3-2.1.1">Take a problematic device, link, or set of devices and/or links out of service.<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-3-2.2">
+          <p id="section-3-2.2.1">Return a device, link, or set of devices and/or links back into service.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-3-2.3">
+          <p id="section-3-2.3.1">Move traffic to other links or devices to alleviate congestion or avoid problematic paths.<a href="#section-3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-3-2.4">
+          <p id="section-3-2.4.1">Roll back a recent change to a device that might have caused the problem.<a href="#section-3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-3-2.5">
+          <p id="section-3-2.5.1">Escalate to a network operator as a last resort when automated mitigation is not possible.<a href="#section-3-2.5.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-3-3">The ability to select the appropriate mitigation action depends on four key features of packet loss:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-3-4">
+        <dt id="section-3-4.1">FEATURE-DISCARD-LOCATION:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.2">
+          <p id="section-3-4.2.1">Determines which devices, interfaces and/or flows are impacted.<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.3">FEATURE-DISCARD-RATE:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.4">
+          <p id="section-3-4.4.1">The rate and/or magnitude of the discards, indicating the severity and urgency of the problem.<a href="#section-3-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.5">FEATURE-DISCARD-DURATION:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.6">
+          <p id="section-3-4.6.1">The duration of the discards which helps to distinguish transient from persistent issues.<a href="#section-3-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-3-4.7">FEATURE-DISCARD-CLASS:</dt>
+        <dd style="margin-left: 1.5em" id="section-3-4.8">
+          <p id="section-3-4.8.1">The type or class of discards, which is crucial for selecting the appropriate of mitigation - for example: error discards may require taking faulty components out of service; no-buffer discards may require traffic redistribution; policy discards typically require no automated action<a href="#section-3-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-3-5">While FEATURE-DISCARD-LOCATION, FEATURE-DISCARD-RATE, and FEATURE-DISCARD-DURATION are implicitly supported by MIB-II <span>[<a href="#RFC1213" class="cite xref">RFC1213</a>]</span> and the YANG Data Model for Interface Management <span>[<a href="#RFC8343" class="cite xref">RFC8343</a>]</span>, FEATURE-DISCARD-CLASS requires a more detailed classification scheme than they define. The following information model defines such a classification scheme to enable automated mapping from loss signals to appropriate mitigation actions.<a href="#section-3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="infomodel">
+<section id="section-4">
+      <h2 id="name-information-model">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-information-model" class="section-name selfRef">Information Model</a>
+      </h2>
+<p id="section-4-1">The information model is defined using YANG <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> with Data Structure Extensions <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span>, allowing the model to remain abstract and decoupled from specific implementations in accordance with <span>[<a href="#RFC3444" class="cite xref">RFC3444</a>]</span>. This abstraction supports different data model implementations - for example, in YANG, IPFIX <span>[<a href="#RFC7011" class="cite xref">RFC7011</a>]</span>, gMNI <span>[<a href="#gMNI" class="cite xref">gMNI</a>]</span> or SNMP <span>[<a href="#RFC1157" class="cite xref">RFC1157</a>]</span> - while ensuring consistency across implementations. Using YANG for the information model enables this abstraction, leverages the community's familiarity with its syntax, and ensures lossless translation to the corresponding YANG data model, which is defined in <a href="#datamodel" class="auto internal xref">Section 5</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="infomodel-structure">
+<section id="section-4.1">
+        <h3 id="name-structure">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-structure" class="section-name selfRef">Structure</a>
+        </h3>
+<p id="section-4.1-1">The information model defines a hierarchical classification scheme for packet discards, which captures where in a device the discards are accounted (component), in which direction they were flowing (direction), whether they were successfully processed or discarded (type), what protocol layer they belong to (layer), and the specific reason for any discards (sub-types). This organisation enables both high-level monitoring of total discards and more detailed triage to map to mitigation actions.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">A complete classification path follows the pattern: component/direction/type/layer/sub-type/sub-sub-type/.../metric. Appendix B illustrates where these discards typically occur in a network device.  The elements of the tree are defined as follows:<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-3.1">
+            <p id="section-4.1-3.1.1">Component:<a href="#section-4.1-3.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-3.1.2.1">
+                <p id="section-4.1-3.1.2.1.1">interface: discards of traffic to or from a specific network interface.<a href="#section-4.1-3.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.1.2.2">
+                <p id="section-4.1-3.1.2.2.1">device: discards of traffic transiting the device.<a href="#section-4.1-3.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.1.2.3">
+                <p id="section-4.1-3.1.2.3.1">control-plane: discards of traffic to or from the device's control plane.<a href="#section-4.1-3.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.1.2.4">
+                <p id="section-4.1-3.1.2.4.1">flow: discards of traffic associated with a specific traffic flow.<a href="#section-4.1-3.1.2.4.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-4.1-3.2">
+            <p id="section-4.1-3.2.1">Direction:<a href="#section-4.1-3.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-3.2.2.1">
+                <p id="section-4.1-3.2.2.1.1">ingress: counters for incoming packets or frames.<a href="#section-4.1-3.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.2.2.2">
+                <p id="section-4.1-3.2.2.2.1">egress: counters for outgoing packets or frames.<a href="#section-4.1-3.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-4.1-3.3">
+            <p id="section-4.1-3.3.1">Type:<a href="#section-4.1-3.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-3.3.2.1">
+                <p id="section-4.1-3.3.2.1.1">traffic: counters for successfully received or transmitted packets or frames.<a href="#section-4.1-3.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.3.2.2">
+                <p id="section-4.1-3.3.2.2.1">discards: counters for packets or frames that were dropped.<a href="#section-4.1-3.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-4.1-3.4">
+            <p id="section-4.1-3.4.1">Layer:<a href="#section-4.1-3.4.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-3.4.2.1">
+                <p id="section-4.1-3.4.2.1.1">l2: Layer 2 traffic and discards, i.e. frame and byte counts.<a href="#section-4.1-3.4.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-4.1-3.4.2.2">
+                <p id="section-4.1-3.4.2.2.1">l3: Layer 3 traffic and discards, i.e. packet and byte counts.<a href="#section-4.1-3.4.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+<p id="section-4.1-4">The hierarchical structure allows for future extension while maintaining backward compatibility. New discard types can be added as new branches without affecting existing implementations.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">The following YANG tree diagram shows the complete structure:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-6">
+<pre>
+module: ietf-packet-discard-reporting
+
+  structure packet-discard-reporting:
+    +-- control-plane {control-plane-stats}?
+    |  +-- traffic* [direction]
+    |  |  +-- direction    identityref
+    |  |  +-- packets?     uint32
+    |  |  +-- bytes?       uint32
+    |  +-- discards* [direction]
+    |     +-- direction    identityref
+    |     +-- packets?     uint32
+    |     +-- bytes?       uint32
+    |     +-- policy
+    |        +-- packets?   uint32
+    +-- interface* [name] {per-interface-stats}?
+    |  +-- name        string
+    |  +-- traffic* [direction]
+    |  |  +-- direction    identityref
+    |  |  +-- l2
+    |  |  |  +-- frames?   uint64
+    |  |  |  +-- bytes?    uint64
+    |  |  +-- l3
+    |  |  |  +-- address-family-stat* [address-family]
+    |  |  |     +-- address-family    identityref
+    |  |  |     +-- packets?          uint64
+    |  |  |     +-- bytes?            uint64
+    |  |  |     +-- unicast
+    |  |  |     |  +-- packets?   uint64
+    |  |  |     |  +-- bytes?     uint64
+    |  |  |     +-- multicast
+    |  |  |        +-- packets?   uint64
+    |  |  |        +-- bytes?     uint64
+    |  |  +-- qos
+    |  |     +-- class* [id]
+    |  |        +-- id         string
+    |  |        +-- packets?   uint64
+    |  |        +-- bytes?     uint64
+    |  +-- discards* [direction]
+    |     +-- direction    identityref
+    |     +-- l2
+    |     |  +-- frames?   uint64
+    |     |  +-- bytes?    uint64
+    |     +-- l3
+    |     |  +-- address-family-stat* [address-family]
+    |     |     +-- address-family    identityref
+    |     |     +-- packets?          uint64
+    |     |     +-- bytes?            uint64
+    |     |     +-- unicast
+    |     |     |  +-- packets?   uint64
+    |     |     |  +-- bytes?     uint64
+    |     |     +-- multicast
+    |     |        +-- packets?   uint64
+    |     |        +-- bytes?     uint64
+    |     +-- errors
+    |     |  +-- l2
+    |     |  |  +-- rx
+    |     |  |  |  +-- frames?          uint32
+    |     |  |  |  +-- crc-error?       uint32
+    |     |  |  |  +-- invalid-mac?     uint32
+    |     |  |  |  +-- invalid-vlan?    uint32
+    |     |  |  |  +-- invalid-frame?   uint32
+    |     |  |  +-- tx
+    |     |  |     +-- frames?   uint32
+    |     |  +-- l3
+    |     |  |  +-- rx
+    |     |  |  |  +-- packets?          uint32
+    |     |  |  |  +-- checksum-error?   uint32
+    |     |  |  |  +-- mtu-exceeded?     uint32
+    |     |  |  |  +-- invalid-packet?   uint32
+    |     |  |  +-- ttl-expired?     uint32
+    |     |  |  +-- no-route?        uint32
+    |     |  |  +-- invalid-sid?     uint32
+    |     |  |  +-- invalid-label?   uint32
+    |     |  |  +-- tx
+    |     |  |     +-- packets?   uint32
+    |     |  +-- internal
+    |     |     +-- packets?        uint32
+    |     |     +-- parity-error?   uint32
+    |     +-- policy
+    |     |  +-- l2
+    |     |  |  +-- frames?   uint32
+    |     |  |  +-- acl?      uint32
+    |     |  +-- l3
+    |     |     +-- packets?      uint32
+    |     |     +-- acl?          uint32
+    |     |     +-- policer
+    |     |     |  +-- packets?   uint32
+    |     |     |  +-- bytes?     uint32
+    |     |     +-- null-route?   uint32
+    |     |     +-- rpf?          uint32
+    |     |     +-- ddos?         uint32
+    |     +-- no-buffer
+    |        +-- class* [id]
+    |           +-- id         string
+    |           +-- packets?   uint64
+    |           +-- bytes?     uint64
+    +-- flow* [direction] {flow-reporting}?
+    |  +-- direction    identityref
+    |  +-- traffic
+    |  |  +-- l2
+    |  |  |  +-- frames?   uint64
+    |  |  |  +-- bytes?    uint64
+    |  |  +-- l3
+    |  |  |  +-- address-family-stat* [address-family]
+    |  |  |     +-- address-family    identityref
+    |  |  |     +-- packets?          uint64
+    |  |  |     +-- bytes?            uint64
+    |  |  |     +-- unicast
+    |  |  |     |  +-- packets?   uint64
+    |  |  |     |  +-- bytes?     uint64
+    |  |  |     +-- multicast
+    |  |  |        +-- packets?   uint64
+    |  |  |        +-- bytes?     uint64
+    |  |  +-- qos
+    |  |     +-- class* [id]
+    |  |        +-- id         string
+    |  |        +-- packets?   uint64
+    |  |        +-- bytes?     uint64
+    |  +-- discards
+    |     +-- l2
+    |     |  +-- frames?   uint64
+    |     |  +-- bytes?    uint64
+    |     +-- l3
+    |     |  +-- address-family-stat* [address-family]
+    |     |     +-- address-family    identityref
+    |     |     +-- packets?          uint64
+    |     |     +-- bytes?            uint64
+    |     |     +-- unicast
+    |     |     |  +-- packets?   uint64
+    |     |     |  +-- bytes?     uint64
+    |     |     +-- multicast
+    |     |        +-- packets?   uint64
+    |     |        +-- bytes?     uint64
+    |     +-- errors
+    |     |  +-- l2
+    |     |  |  +-- rx
+    |     |  |  |  +-- frames?          uint32
+    |     |  |  |  +-- crc-error?       uint32
+    |     |  |  |  +-- invalid-mac?     uint32
+    |     |  |  |  +-- invalid-vlan?    uint32
+    |     |  |  |  +-- invalid-frame?   uint32
+    |     |  |  +-- tx
+    |     |  |     +-- frames?   uint32
+    |     |  +-- l3
+    |     |  |  +-- rx
+    |     |  |  |  +-- packets?          uint32
+    |     |  |  |  +-- checksum-error?   uint32
+    |     |  |  |  +-- mtu-exceeded?     uint32
+    |     |  |  |  +-- invalid-packet?   uint32
+    |     |  |  +-- ttl-expired?     uint32
+    |     |  |  +-- no-route?        uint32
+    |     |  |  +-- invalid-sid?     uint32
+    |     |  |  +-- invalid-label?   uint32
+    |     |  |  +-- tx
+    |     |  |     +-- packets?   uint32
+    |     |  +-- internal
+    |     |     +-- packets?        uint32
+    |     |     +-- parity-error?   uint32
+    |     +-- policy
+    |     |  +-- l2
+    |     |  |  +-- frames?   uint32
+    |     |  |  +-- acl?      uint32
+    |     |  +-- l3
+    |     |     +-- packets?      uint32
+    |     |     +-- acl?          uint32
+    |     |     +-- policer
+    |     |     |  +-- packets?   uint32
+    |     |     |  +-- bytes?     uint32
+    |     |     +-- null-route?   uint32
+    |     |     +-- rpf?          uint32
+    |     |     +-- ddos?         uint32
+    |     +-- no-buffer
+    |        +-- class* [id]
+    |           +-- id         string
+    |           +-- packets?   uint64
+    |           +-- bytes?     uint64
+    +-- device {per-device-stats}?
+       +-- traffic
+       |  +-- l2
+       |  |  +-- frames?   uint64
+       |  |  +-- bytes?    uint64
+       |  +-- l3
+       |  |  +-- address-family-stat* [address-family]
+       |  |     +-- address-family    identityref
+       |  |     +-- packets?          uint64
+       |  |     +-- bytes?            uint64
+       |  |     +-- unicast
+       |  |     |  +-- packets?   uint64
+       |  |     |  +-- bytes?     uint64
+       |  |     +-- multicast
+       |  |        +-- packets?   uint64
+       |  |        +-- bytes?     uint64
+       |  +-- qos
+       |     +-- class* [id]
+       |        +-- id         string
+       |        +-- packets?   uint64
+       |        +-- bytes?     uint64
+       +-- discards
+          +-- l2
+          |  +-- frames?   uint64
+          |  +-- bytes?    uint64
+          +-- l3
+          |  +-- address-family-stat* [address-family]
+          |     +-- address-family    identityref
+          |     +-- packets?          uint64
+          |     +-- bytes?            uint64
+          |     +-- unicast
+          |     |  +-- packets?   uint64
+          |     |  +-- bytes?     uint64
+          |     +-- multicast
+          |        +-- packets?   uint64
+          |        +-- bytes?     uint64
+          +-- errors
+          |  +-- l2
+          |  |  +-- rx
+          |  |  |  +-- frames?          uint32
+          |  |  |  +-- crc-error?       uint32
+          |  |  |  +-- invalid-mac?     uint32
+          |  |  |  +-- invalid-vlan?    uint32
+          |  |  |  +-- invalid-frame?   uint32
+          |  |  +-- tx
+          |  |     +-- frames?   uint32
+          |  +-- l3
+          |  |  +-- rx
+          |  |  |  +-- packets?          uint32
+          |  |  |  +-- checksum-error?   uint32
+          |  |  |  +-- mtu-exceeded?     uint32
+          |  |  |  +-- invalid-packet?   uint32
+          |  |  +-- ttl-expired?     uint32
+          |  |  +-- no-route?        uint32
+          |  |  +-- invalid-sid?     uint32
+          |  |  +-- invalid-label?   uint32
+          |  |  +-- tx
+          |  |     +-- packets?   uint32
+          |  +-- internal
+          |     +-- packets?        uint32
+          |     +-- parity-error?   uint32
+          +-- policy
+          |  +-- l2
+          |  |  +-- frames?   uint32
+          |  |  +-- acl?      uint32
+          |  +-- l3
+          |     +-- packets?      uint32
+          |     +-- acl?          uint32
+          |     +-- policer
+          |     |  +-- packets?   uint32
+          |     |  +-- bytes?     uint32
+          |     +-- null-route?   uint32
+          |     +-- rpf?          uint32
+          |     +-- ddos?         uint32
+          +-- no-buffer
+             +-- class* [id]
+                +-- id         string
+                +-- packets?   uint64
+                +-- bytes?     uint64
+</pre><a href="#section-4.1-6" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-7">The corresponding YANG module is defined in <a href="#infomodel-module" class="auto internal xref">Appendix A</a>.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<p id="section-4.1-8">For additional context, <a href="#wheredropped" class="auto internal xref">Appendix A.1</a> provides an example of where packets may be discarded in a device.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sub-type-definitions">
+<section id="section-4.2">
+        <h3 id="name-sub-type-definitions">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-sub-type-definitions" class="section-name selfRef">Sub-type Definitions</a>
+        </h3>
+<span class="break"></span><dl class="dlParallel" id="section-4.2-1">
+          <dt id="section-4.2-1.1">discards/policy/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.2">
+            <p id="section-4.2-1.2.1">These are intended discards, meaning packets dropped by a device due to a configured policy, including: ACLs, traffic policers, Reverse Path Forwarding (RPF) checks, DDoS protection rules and explicit null routes<a href="#section-4.2-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.3">discards/error/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.4">
+            <p id="section-4.2-1.4.1">These are unintended discards due to errors in processing packets or frames.  There are multiple sub-classes.<a href="#section-4.2-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.5">discards/error/l2/rx/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.6">
+            <p id="section-4.2-1.6.1">These are frames discarded due to errors in the received Layer 2 frame, including: CRC errors, invalid MAC addresses, invalid VLAN tags, frame size violations and other malformed frame conditions<a href="#section-4.2-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.7">discards/error/l3/rx/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.8">
+            <p id="section-4.2-1.8.1">These are discards which occur due to errors in the received packet, indicating an upstream problem rather than an issue with the device dropping the errored packets, including: header checksum errors,  MTU exceeded, invalid packet errors, i.e. incorrect version, incorrect header length, invalid options and other malformed packet conditions<a href="#section-4.2-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.9">discards/error/l3/rx/ttl-expired:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.10">
+            <p id="section-4.2-1.10.1">These are discards due to TTL (or Hop limit) expiry, which can occur for the following reasons: normal trace-route operations, end-system TTL/Hop limit set too low, routing loops in the network.<a href="#section-4.2-1.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.11">discards/error/l3/no-route/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.12">
+            <p id="section-4.2-1.12.1">These are discards which occur due to a packet not matching any route in the routing table, e.g. which may be due to routing configuration errors or may be transient discards during convergence.<a href="#section-4.2-1.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.13">discards/error/local/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.14">
+            <p id="section-4.2-1.14.1">These are discards due to internal device issues, including: parity errors in device memory or other internal hardware errors.  Any errored discards not explicitly assigned to other classes are also accounted for here.<a href="#section-4.2-1.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.2-1.15">discards/no-buffer/:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.2-1.16">
+            <p id="section-4.2-1.16.1">These are discards due to buffer exhaustion, i.e. congestion related discards. These can be tail-drop discards or due to an active queue management algorithm, such as RED <span>[<a href="#RED93" class="cite xref">RED93</a>]</span> or CODEL <span>[<a href="#RFC8289" class="cite xref">RFC8289</a>]</span>.<a href="#section-4.2-1.16.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-4.2-2">An example of possible signal-to-mitigation action mapping is provided in <a href="#mapping" class="auto internal xref">Appendix B</a>.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="datamodel">
+<section id="section-5">
+      <h2 id="name-data-model">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-data-model" class="section-name selfRef">Data Model</a>
+      </h2>
+<p id="section-5-1">This data model implements the information model defined in <a href="#infomodel" class="auto internal xref">Section 4</a> for the interface and device components.  This is classed as a Network Element model as defined by <span>[<a href="#RFC1157" class="cite xref">RFC1157</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="datamodel-structure">
+<section id="section-5.1">
+        <h3 id="name-structure-2">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-structure-2" class="section-name selfRef">Structure</a>
+        </h3>
+<p id="section-5.1-1">There is a direct mapping between the information model components and their data model implementations, with each component in the hierarchy represented by corresponding YANG containers and leaves.  The following YANG tree diagram shows the complete structure:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1-2">
+<pre>
+module: ietf-packet-discard-reporting
+  +--rw interface* [name] {per-interface-stats}?
+  |  +--rw name        string
+  |  +--rw traffic* [direction]
+  |  |  +--rw direction    identityref
+  |  |  +--rw l2
+  |  |  |  +--rw frames?   uint64
+  |  |  |  +--rw bytes?    uint64
+  |  |  +--rw l3
+  |  |  |  +--rw address-family-stat* [address-family]
+  |  |  |     +--rw address-family    identityref
+  |  |  |     +--rw packets?          uint64
+  |  |  |     +--rw bytes?            uint64
+  |  |  |     +--rw unicast
+  |  |  |     |  +--rw packets?   uint64
+  |  |  |     |  +--rw bytes?     uint64
+  |  |  |     +--rw multicast
+  |  |  |        +--rw packets?   uint64
+  |  |  |        +--rw bytes?     uint64
+  |  |  +--rw qos!
+  |  |     +--rw class* [id]
+  |  |        +--rw id         string
+  |  |        +--rw packets?   uint64
+  |  |        +--rw bytes?     uint64
+  |  +--rw discards* [direction]
+  |     +--rw direction    identityref
+  |     +--rw l2
+  |     |  +--rw frames?   uint64
+  |     |  +--rw bytes?    uint64
+  |     +--rw l3
+  |     |  +--rw address-family-stat* [address-family]
+  |     |     +--rw address-family    identityref
+  |     |     +--rw packets?          uint64
+  |     |     +--rw bytes?            uint64
+  |     |     +--rw unicast
+  |     |     |  +--rw packets?   uint64
+  |     |     |  +--rw bytes?     uint64
+  |     |     +--rw multicast
+  |     |        +--rw packets?   uint64
+  |     |        +--rw bytes?     uint64
+  |     +--rw errors
+  |     |  +--rw l2
+  |     |  |  +--rw rx!
+  |     |  |  |  +--rw frames?          uint32
+  |     |  |  |  +--rw crc-error?       uint32
+  |     |  |  |  +--rw invalid-mac?     uint32
+  |     |  |  |  +--rw invalid-vlan?    uint32
+  |     |  |  |  +--rw invalid-frame?   uint32
+  |     |  |  +--rw tx!
+  |     |  |     +--rw frames?   uint32
+  |     |  +--rw l3
+  |     |  |  +--rw rx!
+  |     |  |  |  +--rw packets?          uint32
+  |     |  |  |  +--rw checksum-error?   uint32
+  |     |  |  |  +--rw mtu-exceeded?     uint32
+  |     |  |  |  +--rw invalid-packet?   uint32
+  |     |  |  +--rw ttl-expired?     uint32
+  |     |  |  +--rw no-route?        uint32
+  |     |  |  +--rw invalid-sid?     uint32
+  |     |  |  +--rw invalid-label?   uint32
+  |     |  |  +--rw tx!
+  |     |  |     +--rw packets?   uint32
+  |     |  +--rw internal
+  |     |     +--rw packets?        uint32
+  |     |     +--rw parity-error?   uint32
+  |     +--rw policy
+  |     |  +--rw l2
+  |     |  |  +--rw frames?   uint32
+  |     |  |  +--rw acl?      uint32
+  |     |  +--rw l3
+  |     |     +--rw packets?      uint32
+  |     |     +--rw acl?          uint32
+  |     |     +--rw policer
+  |     |     |  +--rw packets?   uint32
+  |     |     |  +--rw bytes?     uint32
+  |     |     +--rw null-route?   uint32
+  |     |     +--rw rpf?          uint32
+  |     |     +--rw ddos?         uint32
+  |     +--rw no-buffer
+  |        +--rw class* [id]
+  |           +--rw id         string
+  |           +--rw packets?   uint64
+  |           +--rw bytes?     uint64
+  +--rw device! {per-device-stats}?
+     +--rw traffic
+     |  +--rw l2
+     |  |  +--rw frames?   uint64
+     |  |  +--rw bytes?    uint64
+     |  +--rw l3
+     |  |  +--rw address-family-stat* [address-family]
+     |  |     +--rw address-family    identityref
+     |  |     +--rw packets?          uint64
+     |  |     +--rw bytes?            uint64
+     |  |     +--rw unicast
+     |  |     |  +--rw packets?   uint64
+     |  |     |  +--rw bytes?     uint64
+     |  |     +--rw multicast
+     |  |        +--rw packets?   uint64
+     |  |        +--rw bytes?     uint64
+     |  +--rw qos!
+     |     +--rw class* [id]
+     |        +--rw id         string
+     |        +--rw packets?   uint64
+     |        +--rw bytes?     uint64
+     +--rw discards
+        +--rw l2
+        |  +--rw frames?   uint64
+        |  +--rw bytes?    uint64
+        +--rw l3
+        |  +--rw address-family-stat* [address-family]
+        |     +--rw address-family    identityref
+        |     +--rw packets?          uint64
+        |     +--rw bytes?            uint64
+        |     +--rw unicast
+        |     |  +--rw packets?   uint64
+        |     |  +--rw bytes?     uint64
+        |     +--rw multicast
+        |        +--rw packets?   uint64
+        |        +--rw bytes?     uint64
+        +--rw errors
+        |  +--rw l2
+        |  |  +--rw rx!
+        |  |  |  +--rw frames?          uint32
+        |  |  |  +--rw crc-error?       uint32
+        |  |  |  +--rw invalid-mac?     uint32
+        |  |  |  +--rw invalid-vlan?    uint32
+        |  |  |  +--rw invalid-frame?   uint32
+        |  |  +--rw tx!
+        |  |     +--rw frames?   uint32
+        |  +--rw l3
+        |  |  +--rw rx!
+        |  |  |  +--rw packets?          uint32
+        |  |  |  +--rw checksum-error?   uint32
+        |  |  |  +--rw mtu-exceeded?     uint32
+        |  |  |  +--rw invalid-packet?   uint32
+        |  |  +--rw ttl-expired?     uint32
+        |  |  +--rw no-route?        uint32
+        |  |  +--rw invalid-sid?     uint32
+        |  |  +--rw invalid-label?   uint32
+        |  |  +--rw tx!
+        |  |     +--rw packets?   uint32
+        |  +--rw internal
+        |     +--rw packets?        uint32
+        |     +--rw parity-error?   uint32
+        +--rw policy
+        |  +--rw l2
+        |  |  +--rw frames?   uint32
+        |  |  +--rw acl?      uint32
+        |  +--rw l3
+        |     +--rw packets?      uint32
+        |     +--rw acl?          uint32
+        |     +--rw policer
+        |     |  +--rw packets?   uint32
+        |     |  +--rw bytes?     uint32
+        |     +--rw null-route?   uint32
+        |     +--rw rpf?          uint32
+        |     +--rw ddos?         uint32
+        +--rw no-buffer
+           +--rw class* [id]
+              +--rw id         string
+              +--rw packets?   uint64
+              +--rw bytes?     uint64
+</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="requirements">
+<section id="section-5.2">
+        <h3 id="name-implementation-requirements">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-implementation-requirements" class="section-name selfRef">Implementation Requirements</a>
+        </h3>
+<p id="section-5.2-1">The following requirements apply to the implementation of the data model and are intended to ensure consistent implementation across different vendors and platforms while allowing for platform-specific optimisations where needed.  While the model defines a comprehensive set of counters and statistics, implementations <span class="bcp14">MAY</span> support a subset of the defined features based on device capabilities and operational requirements. However, implementations <span class="bcp14">MUST</span> clearly document which features are supported and how they map to the model.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Requirements 1-10 relate to packets forwarded or discarded by the device, while requirement 11 relates to packets destined for or originating from the device:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.2-3">
+<li id="section-5.2-3.1">
+            <p id="section-5.2-3.1.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">MUST</span> be accounted for.<a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.2">
+            <p id="section-5.2-3.2.1">All instances of Layer 2 frame or Layer 3 packet receipt, transmission, and discards <span class="bcp14">SHOULD</span> be attributed to the physical or logical interface of the device where they occur.  Where they cannot be attributed to the interface, they <span class="bcp14">MUST</span> be attributed to the device.<a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.3">
+            <p id="section-5.2-3.3.1">An individual frame <span class="bcp14">MUST</span> only be accounted for by either the Layer 2 traffic class or the Layer 2 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.4">
+            <p id="section-5.2-3.4.1">An individual packet <span class="bcp14">MUST</span> only be accounted for by either the Layer 3 traffic class or the Layer 3 discard classes within a single direction or context, i.e., ingress or egress or device.  This is to avoid double counting.<a href="#section-5.2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.5">
+            <p id="section-5.2-3.5.1">A frame accounted for at Layer 2 <span class="bcp14">SHOULD NOT</span> be accounted for at Layer 3 and vice versa.  An implementation <span class="bcp14">MUST</span> indicate which layers traffic and discards are counted against.  This is to avoid double counting.<a href="#section-5.2-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.6">
+            <p id="section-5.2-3.6.1">The aggregate Layer 2 and Layer 3 traffic and discard classes <span class="bcp14">SHOULD</span> account for all underlying frames or packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.7">
+            <p id="section-5.2-3.7.1">The aggregate Quality of Service (QoS) traffic and no buffer discard classes <span class="bcp14">MUST</span> account for all underlying packets received, transmitted, and discarded across all other classes.<a href="#section-5.2-3.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.8">
+            <p id="section-5.2-3.8.1">In addition to the Layer 2 and Layer 3 aggregate classes, an individual discarded packet <span class="bcp14">MUST</span> only account against a single error, policy, or no-buffer discard subclass.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.9">
+            <p id="section-5.2-3.9.1">When there are multiple reasons for discarding a packet, the ordering of discard class reporting <span class="bcp14">MUST</span> be defined.<a href="#section-5.2-3.9.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.10">
+            <p id="section-5.2-3.10.1">If Diffserv <span>[<a href="#RFC2475" class="cite xref">RFC2475</a>]</span> is not used, no-buffer discards <span class="bcp14">SHOULD</span> be reported as class0, which represents the default class.<a href="#section-5.2-3.10.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-5.2-3.11">
+            <p id="section-5.2-3.11.1">Traffic to the device control plane has its own class, however, traffic from the device control plane <span class="bcp14">SHOULD</span> be accounted for in the same way as other egress traffic.<a href="#section-5.2-3.11.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+</section>
+</div>
+<div id="examples">
+<section id="section-5.3">
+        <h3 id="name-usage-examples">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-usage-examples" class="section-name selfRef">Usage Examples</a>
+        </h3>
+<p id="section-5.3-1">If all of the requirements are met, a "good" unicast IPv4 packet received would increment:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">interface/ingress/traffic/l3/v4/unicast/packets<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1">interface/ingress/traffic/l3/v4/unicast/bytes<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.3">
+            <p id="section-5.3-2.3.1">interface/ingress/traffic/qos/class_0/packets<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.4">
+            <p id="section-5.3-2.4.1">interface/ingress/traffic/qos/class_0/bytes<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-3">A received unicast IPv6 packet discarded due to Hop Limit expiry would increment:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-4.1">
+            <p id="section-5.3-4.1.1">interface/ingress/discards/l3/v6/unicast/packets<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-4.2">
+            <p id="section-5.3-4.2.1">interface/ingress/discards/l3/v6/unicast/bytes<a href="#section-5.3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-4.3">
+            <p id="section-5.3-4.3.1">interface/ingress/discards/l3/rx/ttl-expired/packets<a href="#section-5.3-4.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-5">An IPv4 packet discarded on egress due to no buffers would increment:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-6.1">
+            <p id="section-5.3-6.1.1">interface/egress/discards/l3/v4/unicast/packets<a href="#section-5.3-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.2">
+            <p id="section-5.3-6.2.1">interface/egress/discards/l3/v4/unicast/bytes<a href="#section-5.3-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.3">
+            <p id="section-5.3-6.3.1">interface/egress/discards/no-buffer/class_0/packets<a href="#section-5.3-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-6.4">
+            <p id="section-5.3-6.4.1">interface/egress/discards/no-buffer/class_0/bytes<a href="#section-5.3-6.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-7">A multicast IPv6 packet dropped due to RPF check failure would increment:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-8.1">
+            <p id="section-5.3-8.1.1">interface/ingress/discards/l3/v6/multicast/packets<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-8.2">
+            <p id="section-5.3-8.2.1">interface/ingress/discards/l3/v6/multicast/bytes<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-8.3">
+            <p id="section-5.3-8.3.1">interface/ingress/discards/policy/l3/rpf/packets<a href="#section-5.3-8.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="datamodel-module">
+<section id="section-6">
+      <h2 id="name-data-model-yang-module">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-data-model-yang-module" class="section-name selfRef">Data model - YANG Module</a>
+      </h2>
+<div class="breakable sourcecode" id="section-6-1">
+<pre>&lt;CODE BEGINS&gt;
+module ietf-packet-discard-reporting {
+  yang-version 1.1;
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting";
+  prefix plr;
+
+  organization
+    "IETF OPSAWG (Operations and Management Area Working Group)";
+  contact
+    "WG Web:   https://datatracker.ietf.org/wg/opsawg/
+     WG List:  mailto:opsawg@ietf.org
+
+     Author:   John Evans
+               &lt;mailto:jevanamz@amazon.co.uk&gt;
+
+     Author:   Oleksandr Pylypenko
+               &lt;mailto:opyl@amazon.com&gt;
+
+     Author:   Jeffrey Haas
+               &lt;mailto:jhaas@juniper.net&gt;
+
+     Author:   Aviran Kadosh
+               &lt;mailto:akadosh@cisco.com&gt;
+
+     Author:   Mohamed Boucadair
+               &lt;mailto:mohamed.boucadair@orange.com&gt;";
+  description
+    "This module defines an information model for packet discard
+     reporting.
+
+     Copyright (c) 2024 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Revised BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see the
+     RFC itself for full legal notices.";
+
+  revision 2024-06-04 {
+    description
+      "Initial revision.";
+    reference
+      "RFC XXXX: An Information Model for Packet Discard Reporting";
+  }
+
+  /*
+   * Features
+   */
+
+  feature per-interface-stats {
+    description
+      "Per-interface statistics are available on this device";
+  }
+
+  feature per-device-stats {
+    description
+      "Global device statistics are available on this device";
+  }
+
+  /*
+   * Identities
+   */
+
+  identity direction {
+    description
+      "Defines a direction for the reported statistics";
+  }
+
+  identity ingress {
+    base direction;
+    description
+      "Reports statistics for the received from the network packets";
+  }
+
+  identity egress {
+    base direction;
+    description
+      "Reports statistics for the sent to the network packets";
+  }
+
+  identity address-family {
+    description
+      "Defines a type for the address family.";
+  }
+
+  identity ipv4 {
+    base address-family;
+    description
+      "Identity for an IPv4 address family.";
+  }
+
+  identity ipv6 {
+    base address-family;
+    description
+      "Identity for an IPv6 address family.";
+  }
+
+  identity all {
+    base address-family;
+    description
+      "Identity for all address families.";
+  }
+
+  /*
+   * Groupings
+   */
+
+  grouping basic-packets-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint64;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet and byte counters.";
+    uses basic-packets-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint64;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame and byte counters.";
+    uses basic-frames-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping basic-packets-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint32;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet and byte counters.";
+    uses basic-packets-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint32;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame and byte counters.";
+    uses basic-frames-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping l2-traffic {
+    description
+      "Layer 2 traffic counters.";
+    uses basic-frames-bytes-64;
+  }
+
+  grouping ip {
+    description
+      "Layer 3 traffic counters per address family.";
+    list address-family-stat {
+      key "address-family";
+      description
+        "Reports per address family traffic counters.";
+      leaf address-family {
+        type identityref {
+          base address-family;
+        }
+        description
+          "Specifies an address family.";
+      }
+      uses basic-packets-bytes-64;
+      container unicast {
+        description
+          "Unicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+      container multicast {
+        description
+          "Multicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+    }
+  }
+
+  grouping l3-traffic {
+    description
+      "Layer 3 traffic counters.";
+    uses ip;
+  }
+
+  grouping qos {
+    description
+      "Quality of Service (QoS) traffic counters.";
+    list class {
+      key "id";
+      min-elements 1;
+      description
+        "QoS class traffic counters.";
+      leaf id {
+        type string;
+        description
+          "QoS class identifier.";
+      }
+      uses basic-packets-bytes-64;
+    }
+  }
+
+  grouping traffic {
+    description
+      "All traffic counters.";
+    container l2 {
+      description
+        "Layer 2 traffic counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Layer 3 traffic counters.";
+      uses l3-traffic;
+    }
+    container qos {
+      presence "Qos reporting is enabled";
+      description
+        "QoS traffic counters.";
+      uses qos;
+    }
+  }
+
+  grouping errors-l2-rx {
+    description
+      "Layer 2 ingress frame error discard counters.";
+    container rx {
+      presence "rx";
+      description
+        "Layer 2 ingress frame receive error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of frames discarded due to errors with the received frame.";
+      }
+      leaf crc-error {
+        type uint32;
+        description
+          "The number of frames discarded due to CRC error.";
+      }
+      leaf invalid-mac {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid MAC address.";
+      }
+      leaf invalid-vlan {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid VLAN tag.";
+      }
+      leaf invalid-frame {
+        type uint32;
+        description
+          "The number of invalid frames discarded due to other reasons, not limited to: malformed frames, frame-size violations.";
+      }
+    }
+  }
+
+  grouping errors-l3-rx {
+    description
+      "Layer 3 ingress packet error discard counters.";
+    container rx {
+      presence "rx";
+      description
+        "Layer 3 ingress packet receive error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors in the received packet.";
+      }
+      leaf checksum-error {
+        type uint32;
+        description
+          "The number of received packets discarded due to a checksum error.";
+      }
+      leaf mtu-exceeded {
+        type uint32;
+        description
+          "The number of received packets discarded due to MTU exceeded.";
+      }
+      leaf invalid-packet {
+        type uint32;
+        description
+          "The number of invalid packets discarded due to other reasons, not limited to: invalid packet length, invalid header fields, invalid options, invalid protocol version, invalid flags or control bits, malformed packets.";
+      }
+    }
+    leaf ttl-expired {
+      type uint32;
+      description
+        "The number of received packets discarded due to expired TTL.";
+    }
+    leaf no-route {
+      type uint32;
+      description
+        "The number of packets discarded due to not matching a valid route.";
+    }
+    leaf invalid-sid {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid Segment Routing (SR) SID.";
+    }
+    leaf invalid-label {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid MPLS label.";
+    }
+  }
+
+  grouping errors-l3-int {
+    description
+      "Internal error discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of packets discarded due to internal errors.";
+    }
+    leaf parity-error {
+      type uint32;
+      description
+        "The number of packets discarded due to parity errors.";
+    }
+  }
+
+  grouping errors-l2-tx {
+    description
+      "Layer 2 transmit error discard counters.";
+    container tx {
+      presence "tx";
+      description
+        "Layer 2 transmit frame error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of Layer 2 frames discarded due to errors when transmitting.";
+      }
+    }
+  }
+
+  grouping errors-l3-tx {
+    description
+      "Layer 3 transmit error discard counters.";
+    container tx {
+      presence "tx";
+      description
+        "Layer 3 transmit packet error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors when transmitting.";
+      }
+    }
+  }
+
+  grouping errors {
+    description
+      "Error discard counters.";
+    container l2 {
+      description
+        "Layer 2 frame error discard counters.";
+      uses errors-l2-rx;
+      uses errors-l2-tx;
+    }
+    container l3 {
+      description
+        "Layer 3 packet error discard counters.";
+      uses errors-l3-rx;
+      uses errors-l3-tx;
+    }
+    container internal {
+      description
+        "Internal error discard counters.";
+      uses errors-l3-int;
+    }
+  }
+
+  grouping policy-l2 {
+    description
+      "Layer 2 policy frame discard counters.";
+    leaf frames {
+      type uint32;
+      description
+        "The number of Layer 2 frames discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of frames discarded due to Layer 2 ACLs.";
+    }
+  }
+
+  grouping policy-l3 {
+    description
+      "Layer 3 policy packet discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of Layer 3 packets discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of packets discarded due to Layer 3 ACLs.";
+    }
+    container policer {
+      description
+        "The number of packets discarded due ingress policer violations.";
+      uses basic-packets-bytes-32;
+    }
+    leaf null-route {
+      type uint32;
+      description
+        "The number of packets discarded due to matching a null route.";
+    }
+    leaf rpf {
+      type uint32;
+      description
+        "The number of packets discarded due to failing Reverse Path Forwarding (RPF) check.";
+    }
+    leaf ddos {
+      type uint32;
+      description
+        "The number of packets discarded due to DDoS protection policies.";
+    }
+  }
+
+  grouping discards {
+    description
+      "Discard counters.";
+    container l2 {
+      description
+        "Ingress Layer 2 frame discard counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Ingress Layer 3 packet discard counters.";
+      uses l3-traffic;
+    }
+    container errors {
+      description
+        "Ingress error discard counters.";
+      uses errors;
+    }
+    container policy {
+      description
+        "Ingress policy-related discard counters.";
+      uses policy;
+    }
+    container no-buffer {
+      description
+        "Ingress discard counters due to buffer
+         unavailability.";
+      uses qos;
+    }
+  }
+
+  grouping policy {
+    description
+      "Policy-related discard counters.";
+    container l2 {
+      description
+        "Layer 2 policy frame discard counters.";
+      uses policy-l2;
+    }
+    container l3 {
+      description
+        "Layer 3 policy packet discard counters.";
+      uses policy-l3;
+    }
+  }
+
+  grouping device {
+    description
+      "Device-level traffic and discard counters.";
+    container traffic {
+      description
+        "Traffic counters.";
+      uses traffic;
+    }
+    container discards {
+      description "Discard counters.";
+      uses discards;
+    }
+  }
+
+  grouping interface {
+    description
+      "Interface-level traffic and discard counters.";
+    list traffic {
+      key "direction";
+      description
+        "Traffic counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses traffic;
+    }
+    list discards {
+      key "direction";
+      description
+        "Discard counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses discards;
+    }
+  }
+
+  /*
+   * Main structure definition
+   */
+  list interface {
+    if-feature "per-interface-stats";
+    key "name";
+    description
+      "Indicates a list of interfaces for which packet discard reporting data is provided.";
+    leaf name {
+      type string;
+      description
+        "Indicates the name of the interface.";
+    }
+    uses interface;
+  }
+  container device {
+    if-feature "per-device-stats";
+    presence "Device-level statistics are available.";
+    description
+      "Device level packet counters.";
+    uses device;
+  }
+}
+
+&lt;CODE ENDS&gt;</pre><a href="#section-6-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="security">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">This section discusses security considerations for both the information model and its implementation as a data model.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="security-infomodel">
+<section id="section-7.1">
+        <h3 id="name-information-model-2">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-information-model-2" class="section-name selfRef">Information Model</a>
+        </h3>
+<p id="section-7.1-1">The information model defined in <a href="#infomodel-module" class="auto internal xref">Appendix A</a> specifies a YANG module using <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span> data extensions.  It defines a set of identities, types, and groupings. These nodes are intended to be reused by other YANG modules. The module by itself does not expose any data nodes that are writable, data nodes that contain read-only state, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-datamodel">
+<section id="section-7.2">
+        <h3 id="name-data-model-2">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-data-model-2" class="section-name selfRef">Data Model</a>
+        </h3>
+<p id="section-7.2-1">The YANG module specified in <a href="#datamodel-module" class="auto internal xref">Section 6</a> defines a schema for data with data nodes that contain read-only state.  It is designed to be accessed via network management protocols such as NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>. The lowest NETCONF layer is the secure transport layer, and the mandatory-to-implement secure transport is Secure Shell (SSH) <span>[<a href="#RFC6242" class="cite xref">RFC6242</a>]</span>. The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement secure transport is TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">The Network Configuration Access Control Model (NACM) <span>[<a href="#RFC8341" class="cite xref">RFC8341</a>]</span> provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2-3">The module does not expose any data nodes that are writable, or RPCs. As such, there are no additional security issues related to the YANG module that need to be considered.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">IANA is requested to register the following URI in the "ns" subregistry within the "IETF XML Registry" <span>[<a href="#RFC3688" class="cite xref">RFC3688</a>]</span>:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-2">
+<pre>
+   URI:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
+   Registrant Contact:  The IESG.
+   XML:  N/A; the requested URI is an XML namespace.
+</pre><a href="#section-8-2" class="pilcrow">¶</a>
+</div>
+<p id="section-8-3">IANA is requested to register the following YANG module in the "YANG Module
+   Names" subregistry <span>[<a href="#RFC6020" class="cite xref">RFC6020</a>]</span> within the "YANG Parameters" registry:<a href="#section-8-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8-4">
+<pre>
+   Name:  ietf-packet-discard-reporting
+   Namespace:  urn:ietf:params:xml:ns:ietf-packet-discard-reporting
+   Prefix:  plr
+   Maintained by IANA?  N
+   Reference:  RFC XXXX
+</pre><a href="#section-8-4" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="contributors">
+<section id="section-9">
+      <h2 id="name-contributors">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-contributors" class="section-name selfRef">Contributors</a>
+      </h2>
+<div class="alignLeft art-text artwork" id="section-9-1">
+<pre>
+Nadav Chachmon
+Cisco Systems, Inc.
+170 West Tasman Dr.
+San Jose, CA 95134
+United States of America
+Email: nchachmo@cisco.com
+</pre><a href="#section-9-1" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="section-10">
+      <h2 id="name-acknowledgments">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="section-10-1">The content of this document has benefitted from feedback from JR Rivers, Ronan Waide, Chris DeBruin, and Marcoz Sanz.<a href="#section-10-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-11">
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3688">[RFC3688]</dt>
+        <dd>
+<span class="refAuthor">Mealling, M.</span>, <span class="refTitle">"The IETF XML Registry"</span>, <span class="seriesInfo">BCP 81</span>, <span class="seriesInfo">RFC 3688</span>, <span class="seriesInfo">DOI 10.17487/RFC3688</span>, <time datetime="2004-01" class="refDate">January 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3688">https://www.rfc-editor.org/rfc/rfc3688</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6020">[RFC6020]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6020</span>, <span class="seriesInfo">DOI 10.17487/RFC6020</span>, <time datetime="2010-10" class="refDate">October 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6020">https://www.rfc-editor.org/rfc/rfc6020</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8791">[RFC8791]</dt>
+      <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Björklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"YANG Data Structure Extensions"</span>, <span class="seriesInfo">RFC 8791</span>, <span class="seriesInfo">DOI 10.17487/RFC8791</span>, <time datetime="2020-06" class="refDate">June 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8791">https://www.rfc-editor.org/rfc/rfc8791</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="gMNI">[gMNI]</dt>
+        <dd>
+<span class="refAuthor">Marrow, C.</span>, <span class="refTitle">"gRPC Network Management Interface, IETF 98, March 2017, &lt;https://datatracker.ietf.org/meeting/98/materials/slides-98-rtgwg-gnmi-intro-draft-openconfig-rtgwg-gnmi-spec-00&gt;"</span>, <span>n.d.</span>. </dd>
+<dd class="break"></dd>
+<dt id="RED93">[RED93]</dt>
+        <dd>
+<span class="refAuthor">Jacobson, V.</span>, <span class="refTitle">"Random Early Detection gateways for Congestion Avoidance"</span>, <span>n.d.</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1157">[RFC1157]</dt>
+        <dd>
+<span class="refAuthor">Case, J.</span>, <span class="refAuthor">Fedor, M.</span>, <span class="refAuthor">Schoffstall, M.</span>, and <span class="refAuthor">J. Davin</span>, <span class="refTitle">"Simple Network Management Protocol (SNMP)"</span>, <span class="seriesInfo">RFC 1157</span>, <span class="seriesInfo">DOI 10.17487/RFC1157</span>, <time datetime="1990-05" class="refDate">May 1990</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1157">https://www.rfc-editor.org/rfc/rfc1157</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1213">[RFC1213]</dt>
+        <dd>
+<span class="refAuthor">McCloghrie, K.</span> and <span class="refAuthor">M. Rose</span>, <span class="refTitle">"Management Information Base for Network Management of TCP/IP-based internets: MIB-II"</span>, <span class="seriesInfo">STD 17</span>, <span class="seriesInfo">RFC 1213</span>, <span class="seriesInfo">DOI 10.17487/RFC1213</span>, <time datetime="1991-03" class="refDate">March 1991</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1213">https://www.rfc-editor.org/rfc/rfc1213</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2475">[RFC2475]</dt>
+        <dd>
+<span class="refAuthor">Blake, S.</span>, <span class="refAuthor">Black, D.</span>, <span class="refAuthor">Carlson, M.</span>, <span class="refAuthor">Davies, E.</span>, <span class="refAuthor">Wang, Z.</span>, and <span class="refAuthor">W. Weiss</span>, <span class="refTitle">"An Architecture for Differentiated Services"</span>, <span class="seriesInfo">RFC 2475</span>, <span class="seriesInfo">DOI 10.17487/RFC2475</span>, <time datetime="1998-12" class="refDate">December 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2475">https://www.rfc-editor.org/rfc/rfc2475</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3444">[RFC3444]</dt>
+        <dd>
+<span class="refAuthor">Pras, A.</span> and <span class="refAuthor">J. Schoenwaelder</span>, <span class="refTitle">"On the Difference between Information Models and Data Models"</span>, <span class="seriesInfo">RFC 3444</span>, <span class="seriesInfo">DOI 10.17487/RFC3444</span>, <time datetime="2003-01" class="refDate">January 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3444">https://www.rfc-editor.org/rfc/rfc3444</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6241">[RFC6241]</dt>
+        <dd>
+<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6242">[RFC6242]</dt>
+        <dd>
+<span class="refAuthor">Wasserman, M.</span>, <span class="refTitle">"Using the NETCONF Protocol over Secure Shell (SSH)"</span>, <span class="seriesInfo">RFC 6242</span>, <span class="seriesInfo">DOI 10.17487/RFC6242</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6242">https://www.rfc-editor.org/rfc/rfc6242</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7011">[RFC7011]</dt>
+        <dd>
+<span class="refAuthor">Claise, B., Ed.</span>, <span class="refAuthor">Trammell, B., Ed.</span>, and <span class="refAuthor">P. Aitken</span>, <span class="refTitle">"Specification of the IP Flow Information Export (IPFIX) Protocol for the Exchange of Flow Information"</span>, <span class="seriesInfo">STD 77</span>, <span class="seriesInfo">RFC 7011</span>, <span class="seriesInfo">DOI 10.17487/RFC7011</span>, <time datetime="2013-09" class="refDate">September 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7011">https://www.rfc-editor.org/rfc/rfc7011</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7270">[RFC7270]</dt>
+        <dd>
+<span class="refAuthor">Yourtchenko, A.</span>, <span class="refAuthor">Aitken, P.</span>, and <span class="refAuthor">B. Claise</span>, <span class="refTitle">"Cisco-Specific Information Elements Reused in IP Flow Information Export (IPFIX)"</span>, <span class="seriesInfo">RFC 7270</span>, <span class="seriesInfo">DOI 10.17487/RFC7270</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7270">https://www.rfc-editor.org/rfc/rfc7270</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8040">[RFC8040]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8289">[RFC8289]</dt>
+        <dd>
+<span class="refAuthor">Nichols, K.</span>, <span class="refAuthor">Jacobson, V.</span>, <span class="refAuthor">McGregor, A., Ed.</span>, and <span class="refAuthor">J. Iyengar, Ed.</span>, <span class="refTitle">"Controlled Delay Active Queue Management"</span>, <span class="seriesInfo">RFC 8289</span>, <span class="seriesInfo">DOI 10.17487/RFC8289</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8289">https://www.rfc-editor.org/rfc/rfc8289</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8340">[RFC8340]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M.</span> and <span class="refAuthor">L. Berger, Ed.</span>, <span class="refTitle">"YANG Tree Diagrams"</span>, <span class="seriesInfo">BCP 215</span>, <span class="seriesInfo">RFC 8340</span>, <span class="seriesInfo">DOI 10.17487/RFC8340</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8340">https://www.rfc-editor.org/rfc/rfc8340</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8341">[RFC8341]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span> and <span class="refAuthor">M. Bjorklund</span>, <span class="refTitle">"Network Configuration Access Control Model"</span>, <span class="seriesInfo">STD 91</span>, <span class="seriesInfo">RFC 8341</span>, <span class="seriesInfo">DOI 10.17487/RFC8341</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8341">https://www.rfc-editor.org/rfc/rfc8341</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8343">[RFC8343]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M.</span>, <span class="refTitle">"A YANG Data Model for Interface Management"</span>, <span class="seriesInfo">RFC 8343</span>, <span class="seriesInfo">DOI 10.17487/RFC8343</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8343">https://www.rfc-editor.org/rfc/rfc8343</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+      <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="infomodel-module">
+<section id="appendix-A">
+      <h2 id="name-information-model-yang-modu">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-information-model-yang-modu" class="section-name selfRef">Information Model - YANG Module</a>
+      </h2>
+<p id="appendix-A-1">The "ietf-packet-discard-reporting" yang module uses the "sx" structure defined in <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<div class="breakable sourcecode" id="appendix-A-2">
+<pre>&lt;CODE BEGINS&gt;
+module ietf-packet-discard-reporting {
+  yang-version 1.1;
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting";
+  prefix plr;
+
+  import ietf-yang-structure-ext {
+    prefix sx;
+    reference
+      "RFC 8791: YANG Data Structure Extensions";
+  }
+
+  organization
+    "IETF OPSAWG (Operations and Management Area Working Group)";
+  contact
+    "WG Web:   https://datatracker.ietf.org/wg/opsawg/
+     WG List:  mailto:opsawg@ietf.org
+
+     Author:   John Evans
+               &lt;mailto:jevanamz@amazon.co.uk&gt;
+
+     Author:   Oleksandr Pylypenko
+               &lt;mailto:opyl@amazon.com&gt;
+
+     Author:   Jeffrey Haas
+               &lt;mailto:jhaas@juniper.net&gt;
+
+     Author:   Aviran Kadosh
+               &lt;mailto:akadosh@cisco.com&gt;
+
+     Author:   Mohamed Boucadair
+               &lt;mailto:mohamed.boucadair@orange.com&gt;";
+  description
+    "This module defines an information model for packet discard
+     reporting.
+
+     Copyright (c) 2024 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Revised BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX; see the
+     RFC itself for full legal notices.";
+
+  revision 2024-06-04 {
+    description
+      "Initial revision.";
+    reference
+      "RFC XXXX: An Information Model for Packet Discard Reporting";
+  }
+
+  /*
+   * Features
+   */
+
+  feature per-interface-stats {
+    description
+      "Per-interface statistics are available on this device";
+  }
+
+  feature per-device-stats {
+    description
+      "Global device statistics are available on this device";
+  }
+
+  feature control-plane-stats {
+    description
+      "Control plane statistics are available on this device";
+  }
+
+  feature flow-reporting {
+    description
+      "Flow reporting is available on this device";
+  }
+
+  /*
+   * Identities
+   */
+
+  identity direction {
+    description
+      "Defines a direction for the reported statistics";
+  }
+
+  identity ingress {
+    base direction;
+    description
+      "Reports statistics for the received from the network packets";
+  }
+
+  identity egress {
+    base direction;
+    description
+      "Reports statistics for the sent to the network packets";
+  }
+
+  identity address-family {
+    description
+      "Defines a type for the address family.";
+  }
+
+  identity ipv4 {
+    base address-family;
+    description
+      "Identity for an IPv4 address family.";
+  }
+
+  identity ipv6 {
+    base address-family;
+    description
+      "Identity for an IPv6 address family.";
+  }
+
+  identity all {
+    base address-family;
+    description
+      "Identity for all address families.";
+  }
+
+  /*
+   * Groupings
+   */
+
+  grouping basic-packets-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint64;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 3 packet and byte counters.";
+    uses basic-packets-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint64;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-64 {
+    description
+      "Grouping for 64-bit Layer 2 frame and byte counters.";
+    uses basic-frames-64;
+    leaf bytes {
+      type uint64;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping basic-packets-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet counters.";
+    leaf packets {
+      type uint32;
+      description
+        "Number of Layer 3 packets.";
+    }
+  }
+
+  grouping basic-packets-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 3 packet and byte counters.";
+    uses basic-packets-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 3 bytes.";
+    }
+  }
+
+  grouping basic-frames-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame counters.";
+    leaf frames {
+      type uint32;
+      description
+        "Number of Layer 2 frames.";
+    }
+  }
+
+  grouping basic-frames-bytes-32 {
+    description
+      "Grouping for 32-bit Layer 2 frame and byte counters.";
+    uses basic-frames-32;
+    leaf bytes {
+      type uint32;
+      description
+        "Number of Layer 2 bytes.";
+    }
+  }
+
+  grouping l2-traffic {
+    description
+      "Layer 2 traffic counters.";
+    uses basic-frames-bytes-64;
+  }
+
+  grouping ip {
+    description
+      "Layer 3 traffic counters per address family.";
+    list address-family-stat {
+      key "address-family";
+      description
+        "Reports per address family traffic counters.";
+      leaf address-family {
+        type identityref {
+          base address-family;
+        }
+        description
+          "Specifies an address family.";
+      }
+      uses basic-packets-bytes-64;
+      container unicast {
+        description
+          "Unicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+      container multicast {
+        description
+          "Multicast traffic counters.";
+        uses basic-packets-bytes-64;
+      }
+    }
+  }
+
+  grouping l3-traffic {
+    description
+      "Layer 3 traffic counters.";
+    uses ip;
+  }
+
+  grouping qos {
+    description
+      "Quality of Service (QoS) traffic counters.";
+    list class {
+      key "id";
+      min-elements 1;
+      description
+        "QoS class traffic counters.";
+      leaf id {
+        type string;
+        description
+          "QoS class identifier.";
+      }
+      uses basic-packets-bytes-64;
+    }
+  }
+
+  grouping traffic {
+    description
+      "All traffic counters.";
+    container l2 {
+      description
+        "Layer 2 traffic counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Layer 3 traffic counters.";
+      uses l3-traffic;
+    }
+    container qos {
+      description
+        "QoS traffic counters.";
+      uses qos;
+    }
+  }
+
+  grouping errors-l2-rx {
+    description
+      "Layer 2 ingress frame error discard counters.";
+    container rx {
+      description
+        "Layer 2 ingress frame receive error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of frames discarded due to errors with the received frame.";
+      }
+      leaf crc-error {
+        type uint32;
+        description
+          "The number of frames discarded due to CRC error.";
+      }
+      leaf invalid-mac {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid MAC address.";
+      }
+      leaf invalid-vlan {
+        type uint32;
+        description
+          "The number of frames discarded due to an invalid VLAN tag.";
+      }
+      leaf invalid-frame {
+        type uint32;
+        description
+          "The number of invalid frames discarded due to other reasons, not limited to: malformed frames, frame-size violations.";
+      }
+    }
+  }
+
+  grouping errors-l3-rx {
+    description
+      "Layer 3 ingress packet error discard counters.";
+    container rx {
+      description
+        "Layer 3 ingress packet receive error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors in the received packet.";
+      }
+      leaf checksum-error {
+        type uint32;
+        description
+          "The number of received packets discarded due to a checksum error.";
+      }
+      leaf mtu-exceeded {
+        type uint32;
+        description
+          "The number of received packets discarded due to MTU exceeded.";
+      }
+      leaf invalid-packet {
+        type uint32;
+        description
+          "The number of invalid packets discarded due to other reasons, not limited to: invalid packet length, invalid header fields, invalid options, invalid protocol version, invalid flags or control bits, malformed packets.";
+      }
+    }
+    leaf ttl-expired {
+      type uint32;
+      description
+        "The number of received packets discarded due to expired TTL.";
+    }
+    leaf no-route {
+      type uint32;
+      description
+        "The number of packets discarded due to not matching a valid route.";
+    }
+    leaf invalid-sid {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid Segment Routing (SR) SID.";
+    }
+    leaf invalid-label {
+      type uint32;
+      description
+        "The number of packets discarded due to an invalid MPLS label.";
+    }
+  }
+
+  grouping errors-l3-int {
+    description
+      "Internal error discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of packets discarded due to internal errors.";
+    }
+    leaf parity-error {
+      type uint32;
+      description
+        "The number of packets discarded due to parity errors.";
+    }
+  }
+
+  grouping errors-l2-tx {
+    description
+      "Layer 2 transmit error discard counters.";
+    container tx {
+      description
+        "Layer 2 transmit frame error discard counters.";
+      leaf frames {
+        type uint32;
+        description
+          "The number of Layer 2 frames discarded due to errors when transmitting.";
+      }
+    }
+  }
+
+  grouping errors-l3-tx {
+    description
+      "Layer 3 transmit error discard counters.";
+    container tx {
+      description
+        "Layer 3 transmit packet error discard counters.";
+      leaf packets {
+        type uint32;
+        description
+          "The number of Layer 3 packets discarded due to errors when transmitting.";
+      }
+    }
+  }
+
+  grouping errors {
+    description
+      "Error discard counters.";
+    container l2 {
+      description
+        "Layer 2 frame error discard counters.";
+      uses errors-l2-rx;
+      uses errors-l2-tx;
+    }
+    container l3 {
+      description
+        "Layer 3 packet error discard counters.";
+      uses errors-l3-rx;
+      uses errors-l3-tx;
+    }
+    container internal {
+      description
+        "Internal error discard counters.";
+      uses errors-l3-int;
+    }
+  }
+
+  grouping policy-l2 {
+    description
+      "Layer 2 policy frame discard counters.";
+    leaf frames {
+      type uint32;
+      description
+        "The number of Layer 2 frames discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of frames discarded due to Layer 2 ACLs.";
+    }
+  }
+
+  grouping policy-l3 {
+    description
+      "Layer 3 policy packet discard counters.";
+    leaf packets {
+      type uint32;
+      description
+        "The number of Layer 3 packets discarded due to policy.";
+    }
+    leaf acl {
+      type uint32;
+      description
+        "The number of packets discarded due to Layer 3 ACLs.";
+    }
+    container policer {
+      description
+        "The number of packets discarded due ingress policer violations.";
+      uses basic-packets-bytes-32;
+    }
+    leaf null-route {
+      type uint32;
+      description
+        "The number of packets discarded due to matching a null route.";
+    }
+    leaf rpf {
+      type uint32;
+      description
+        "The number of packets discarded due to failing Reverse Path Forwarding (RPF) check.";
+    }
+    leaf ddos {
+      type uint32;
+      description
+        "The number of packets discarded due to DDoS protection policies.";
+    }
+  }
+
+  grouping discards {
+    description
+      "Discard counters.";
+    container l2 {
+      description
+        "Ingress Layer 2 frame discard counters.";
+      uses l2-traffic;
+    }
+    container l3 {
+      description
+        "Ingress Layer 3 packet discard counters.";
+      uses l3-traffic;
+    }
+    container errors {
+      description
+        "Ingress error discard counters.";
+      uses errors;
+    }
+    container policy {
+      description
+        "Ingress policy-related discard counters.";
+      uses policy;
+    }
+    container no-buffer {
+      description
+        "Ingress discard counters due to buffer
+         unavailability.";
+      uses qos;
+    }
+  }
+
+  grouping policy {
+    description
+      "Policy-related discard counters.";
+    container l2 {
+      description
+        "Layer 2 policy frame discard counters.";
+      uses policy-l2;
+    }
+    container l3 {
+      description
+        "Layer 3 policy packet discard counters.";
+      uses policy-l3;
+    }
+  }
+
+  grouping device {
+    description
+      "Device-level traffic and discard counters.";
+    container traffic {
+      description
+        "Traffic counters.";
+      uses traffic;
+    }
+    container discards {
+      description
+        "Discard counters.";
+      uses discards;
+    }
+  }
+
+  grouping interface {
+    description
+      "Interface-level traffic and discard counters.";
+    list traffic {
+      key "direction";
+      description
+        "Traffic counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses traffic;
+    }
+    list discards {
+      key "direction";
+      description
+        "Discard counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses discards;
+    }
+  }
+
+  grouping control-plane {
+    description
+      "Control plane packet counters.";
+    list traffic {
+      key "direction";
+      description
+        "Total control plane packets.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses basic-packets-bytes-32;
+    }
+    list discards {
+      key "direction";
+      description
+        "Control plane packet discard counters.";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      uses basic-packets-bytes-32;
+      container policy {
+        description
+          "Number of control plane packets discarded due to policy.";
+        uses basic-packets-32;
+      }
+    }
+  }
+
+  /*
+   * Main structure definition
+   */
+  sx:structure packet-discard-reporting {
+    description
+      "Specifies the abstract structure of packet discard reporting data.";
+    container control-plane {
+      if-feature "control-plane-stats";
+      description
+        "Control plane packet counters.";
+      uses control-plane;
+    }
+    list interface {
+      if-feature "per-interface-stats";
+      key "name";
+      description
+        "Indicates a list of interfaces for which packet discard reporting data is provided.";
+      leaf name {
+        type string;
+        description
+          "Indicates the name of the interface.";
+      }
+      uses interface;
+    }
+    list flow {
+      if-feature "flow-reporting";
+      key "direction";
+      leaf direction {
+        type identityref {
+          base direction;
+        }
+        description
+          "Specifies a direction.";
+      }
+      description
+        "Flow packet counters.";
+      uses device;
+    }
+    container device {
+      if-feature "per-device-stats";
+      description
+        "Device level packet counters.";
+      uses device;
+    }
+  }
+}
+
+&lt;CODE ENDS&gt;</pre><a href="#appendix-A-2" class="pilcrow">¶</a>
+</div>
+<div id="wheredropped">
+<section id="appendix-A.1">
+        <h3 id="name-where-do-packets-get-droppe">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-where-do-packets-get-droppe" class="section-name selfRef">Where do packets get dropped?</a>
+        </h3>
+<p id="appendix-A.1-1">Understanding where packets are discarded in a network device is essential for interpreting discard signals and determining appropriate mitigation actions.  <a href="#ex-drop" class="auto internal xref">Figure 1</a> depicts an example of where and why packets may be discarded in a typical single-ASIC, shared-buffered type device. While actual device architectures vary between vendors and platforms, with some using multiple ASICs, distributed forwarding, or different buffering architectures, this example illustrates the common processing stages where packets may be dropped. The logical model for classifying and reporting discards remains consistent regardless of the underlying hardware architecture.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">Packets ingress on the left and egress on the right:<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<span id="name-example-of-where-packets-ge"></span><div id="ex-drop">
+<figure id="figure-1">
+          <div class="alignLeft art-text artwork" id="appendix-A.1-3.1">
+<pre>
+
+                                                      +----------+
+                                                      |          |
+                                                      |  CPU     |
+                                                      |          |
+                                                      +--+---^---+
+                                                from_cpu |   | to_cpu
+                                                         |   |
+                          +------------------------------v---+-------------------------------+
+                          |                                                                  |
+
+            +----------+  +----------+  +----------+  +----------+  +----------+  +----------+  +----------+
+            |          |  |          |  |          |  |          |  |          |  |          |  |          |
+ Packet rx -&gt;  Phy     +--&gt;  Mac     +--&gt; Ingress  +--&gt; Buffers  +--&gt; Egresss  +--&gt;  Mac     +--&gt;  Phy     +-&gt; Packet tx
+            |          |  |          |  |  Pipeline|  |          |  |  Pipeline|  |          |  |          |
+            +----------+  +----------+  +----------+  +----------+  +----------+  +----------+  +----------+
+
+  Intended                               policy/acl                  policy/acl
+  Discards:                              policy/policer              policy/policer
+                                         policy/urpf
+                                         policy/null-route
+
+Unintended                 error/rx/l2   error/l3/rx   no-buffer     error/l3/tx
+  Discards:                              error/local
+                                         error/l3/no-route
+                                         error/l3/rx/ttl-expired
+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-example-of-where-packets-ge" class="selfRef">Example of where packets get dropped</a>
+          </figcaption></figure>
+</div>
+<p id="appendix-A.1-4">See Appendix C for examples of how these discard signals map to root causes and mitigation actions.<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="mapping">
+<section id="appendix-B">
+      <h2 id="name-example-signal-to-mitigatio">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-example-signal-to-mitigatio" class="section-name selfRef">Example signal-to-mitigation action mapping</a>
+      </h2>
+<p id="appendix-B-1">The effectiveness of automated mitigation depends on correctly mapping discard signals to root causes and appropriate actions.  <a href="#ex-table" class="auto internal xref">Table 1</a> gives example discard signal-to-mitigation action mappings based on the features described in section 3.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<span id="name-example-signal-cause-mitiga"></span><div id="ex-table">
+<table class="center" id="table-1">
+        <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-example-signal-cause-mitiga" class="selfRef">Example Signal-Cause-Mitigation Mapping</a>
+        </caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">DISCARD-CLASS</th>
+            <th class="text-left" rowspan="1" colspan="1">Discard cause</th>
+            <th class="text-left" rowspan="1" colspan="1">DISCARD-RATE</th>
+            <th class="text-center" rowspan="1" colspan="1">DISCARD-DURATION</th>
+            <th class="text-center" rowspan="1" colspan="1">Unintended?</th>
+            <th class="text-left" rowspan="1" colspan="1">Possible actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l2/rx</td>
+            <td class="text-left" rowspan="1" colspan="1">Upstream device or link error</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1min)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Take upstream link or device out-of-service</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/rx/ttl-expired</td>
+            <td class="text-left" rowspan="1" colspan="1">Tracert</td>
+            <td class="text-left" rowspan="1" colspan="1">&lt;=Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1"> </td>
+            <td class="text-center" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">no action</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/rx/ttl-expired</td>
+            <td class="text-left" rowspan="1" colspan="1">Convergence</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1s)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">No action</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/rx/ttl-expired</td>
+            <td class="text-left" rowspan="1" colspan="1">Routing loop</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1min)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Roll-back change</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">.*/policy/.*</td>
+            <td class="text-left" rowspan="1" colspan="1">Policy</td>
+            <td class="text-left" rowspan="1" colspan="1"> </td>
+            <td class="text-center" rowspan="1" colspan="1"> </td>
+            <td class="text-center" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">No action</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/no-route</td>
+            <td class="text-left" rowspan="1" colspan="1">Convergence</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1s)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">No action</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/no-route</td>
+            <td class="text-left" rowspan="1" colspan="1">Config error</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1min)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Roll-back change</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/l3/no-route</td>
+            <td class="text-left" rowspan="1" colspan="1">Invalid destination</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(10min)</td>
+            <td class="text-center" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">Escalate to operator</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">ingress/discards/errors/local</td>
+            <td class="text-left" rowspan="1" colspan="1">Device errors</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1min)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Take device out-of-service</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">egress/discards/no-buffer</td>
+            <td class="text-left" rowspan="1" colspan="1">Congestion</td>
+            <td class="text-left" rowspan="1" colspan="1">&lt;=Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1"> </td>
+            <td class="text-center" rowspan="1" colspan="1">N</td>
+            <td class="text-left" rowspan="1" colspan="1">No action</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">egress/discards/no-buffer</td>
+            <td class="text-left" rowspan="1" colspan="1">Congestion</td>
+            <td class="text-left" rowspan="1" colspan="1">&gt;Baseline</td>
+            <td class="text-center" rowspan="1" colspan="1">O(1min)</td>
+            <td class="text-center" rowspan="1" colspan="1">Y</td>
+            <td class="text-left" rowspan="1" colspan="1">Bring capacity back into service or move traffic</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
+<p id="appendix-B-3">The 'Baseline' in the 'DISCARD-RATE' column is both DISCARD-CLASS and network dependent.<a href="#appendix-B-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="experience">
+<section id="appendix-C">
+      <h2 id="name-implementation-experience">
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-implementation-experience" class="section-name selfRef">Implementation Experience</a>
+      </h2>
+<p id="appendix-C-1">This appendix captures practical insights gained from implementing this information model across multiple vendors' platforms, as guidance for future implementers.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="appendix-C-2">
+<li id="appendix-C-2.1">
+          <p id="appendix-C-2.1.1">The number and granularity of discard classes defined in the information model represent a compromise.  It aims to provide sufficient detail to enable appropriate automated actions while avoiding excessive detail, which may hinder quick problem identification.  Additionally, it helps to limit the quantity of data produced per interface, constraining the data volume and device CPU impacts.  While further granularity is possible, the defined schema has generally proven to be sufficient for the task of mitigating unintended packet loss.<a href="#appendix-C-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.2">
+          <p id="appendix-C-2.2.1">There are many possible ways to define the discard classification tree.  For example, we could have used a multi-rooted tree, rooted in each protocol.  Instead, we opted to define a tree where protocol discards and causal discard classes are accounted for orthogonally.  This decision reduces the number of combinations of classes and has proven sufficient for determining mitigation actions.<a href="#appendix-C-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.3">
+          <p id="appendix-C-2.3.1">NoBuffer discards can be realized differently with different memory architectures. Whether a NoBuffer discard is attributed to ingress or egress can differ accordingly.  For successful auto-mitigation, discards due to egress interface congestion should be reported on egress, while discards due to device-level congestion (e.g. due to exceeding the device forwarding rate) should be reported on ingress.<a href="#appendix-C-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.4">
+          <p id="appendix-C-2.4.1">Platforms often account for the number of packets discarded where the TTL has expired (or Hop Limit exceeded), and the device CPU has returned an ICMP Time Exceeded message.  There is typically a policer applied to limit the number of packets sent to the device CPU, however, which implicitly limits the rate of TTL discards that are processed.  One method to account for all packet discards due to TTL expired, even those that are dropped by a policer when being forwarded to the CPU, is to use accounting of all ingress packets received with TTL=1 as a proxy measure.<a href="#appendix-C-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.5">
+          <p id="appendix-C-2.5.1">Where no route discards are implemented with a default null route, separate discard accounting is required for any explicit null routes configured, in order to differentiate between interface/ingress/discards/policy/null-route/packets and interface/ingress/discards/errors/no-route/packets.<a href="#appendix-C-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.6">
+          <p id="appendix-C-2.6.1">It is useful to account separately for transit packets discarded by ACLs or policers, and packets discarded by ACLs or policers which limit the number of packets to the device control plane.<a href="#appendix-C-2.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.7">
+          <p id="appendix-C-2.7.1">It is not possible to identify a configuration error - e.g., when intended discards are unintended - with device discard metrics alone.  For example, additional context is needed to determine if ACL discards are intended or due to a misconfigured ACL, i.e., with configuration validation before deployment or by detecting a significant change in ACL discards after a configuration change compared to before.<a href="#appendix-C-2.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.8">
+          <p id="appendix-C-2.8.1">Where traffic byte counters need to be 64-bit, packet and discard counters that increase at a lower rate may be encoded in 32-bit.<a href="#appendix-C-2.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.9">
+          <p id="appendix-C-2.9.1">Aggregate counters need to be able to deal with the possibility of discontinuities in the underlying counters.<a href="#appendix-C-2.9.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.10">
+          <p id="appendix-C-2.10.1">In cases where the reporting device is the source or destination of a tunnel, the ingress protocol for a packet may differ from the egress protocol; if IPv4 is tunnelled over IPv6 for example.  Some implementations may attribute egress discards to the ingress protocol.<a href="#appendix-C-2.10.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="appendix-C-2.11">
+          <p id="appendix-C-2.11.1">While the classification tree is seven layers deep, a minimal implementation may only implement the top six layers.<a href="#appendix-C-2.11.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-D">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">John Evans</span></div>
+<div dir="auto" class="left"><span class="org">Amazon</span></div>
+<div dir="auto" class="left"><span class="street-address">1 Principal Place, Worship Street</span></div>
+<div dir="auto" class="left"><span class="locality">London</span></div>
+<div dir="auto" class="left"><span class="postal-code">EC2A 2FA</span></div>
+<div dir="auto" class="left"><span class="country-name">United Kingdom</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jevanamz@amazon.co.uk" class="email">jevanamz@amazon.co.uk</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Oleksandr Pylypenko</span></div>
+<div dir="auto" class="left"><span class="org">Amazon</span></div>
+<div dir="auto" class="left"><span class="street-address">410 Terry Ave N</span></div>
+<div dir="auto" class="left">
+<span class="locality">Seattle</span>, <span class="region">WA</span> <span class="postal-code">98109</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:opyl@amazon.com" class="email">opyl@amazon.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jeffrey Haas</span></div>
+<div dir="auto" class="left"><span class="org">Juniper Networks</span></div>
+<div dir="auto" class="left"><span class="street-address">1133 Innovation Way</span></div>
+<div dir="auto" class="left">
+<span class="locality">Sunnyvale</span>, <span class="region">CA</span> <span class="postal-code">94089</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jhaas@juniper.net" class="email">jhaas@juniper.net</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Aviran Kadosh</span></div>
+<div dir="auto" class="left"><span class="org">Cisco Systems, Inc.</span></div>
+<div dir="auto" class="left"><span class="street-address">170 West Tasman Dr.</span></div>
+<div dir="auto" class="left">
+<span class="locality">San Jose</span>, <span class="region">CA</span> <span class="postal-code">95134</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">United States of America</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:akadosh@cisco.com" class="email">akadosh@cisco.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Mohamed Boucadair</span></div>
+<div dir="auto" class="left"><span class="org">Orange</span></div>
+<div dir="auto" class="left"><span class="country-name">France</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mohamed.boucadair@orange.com" class="email">mohamed.boucadair@orange.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
