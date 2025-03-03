@@ -225,6 +225,16 @@ discards/no-buffer/:
 
 An example of possible signal-to-mitigation action mapping is provided in {{mapping}}.
 
+## Information Model - YANG Module {#infomodel-module}
+
+The "ietf-packet-discard-reporting" module uses the "sx" structure defined in {{!RFC8791}}.
+
+~~~~~~~~~~
+<CODE BEGINS>
+{::include-fold ./yang/draft-ietf-opsawg-discardmodel.yang}
+<CODE ENDS>
+~~~~~~~~~~
+
 # Data Model   {#datamodel}
 
 This data model implements the information model defined in {{infomodel}} for the interface and device components.  This is classed as a Network Element model as defined by {{?RFC1157}}.
@@ -236,7 +246,6 @@ There is a direct mapping between the information model components and their dat
 ~~~~~~~~~~
 {::include ./yang/draft-ietf-data-model-tree.txt}
 ~~~~~~~~~~
-
 
 ## Implementation Requirements {#requirements}
 
@@ -289,7 +298,7 @@ A multicast IPv6 packet dropped due to RPF check failure would increment:
 
 ~~~~~~~~~~
 <CODE BEGINS>
-{::include ./yang/draft-ietf-data-model.yang}
+{::include-fold ./yang/draft-ietf-data-model.yang}
 <CODE ENDS>
 ~~~~~~~~~~
 
@@ -347,16 +356,6 @@ IANA is requested to register the following URI in the "ns" subregistry within t
 The content of this document has benefitted from feedback from JR Rivers, Ronan Waide, Chris DeBruin, and Marcoz Sanz.
 
 --- back
-
-# Information Model - YANG Module {#infomodel-module}
-
-The "ietf-packet-discard-reporting" yang module uses the "sx" structure defined in {{!RFC8791}}.
-
-~~~~~~~~~~
-<CODE BEGINS>
-{::include ./yang/draft-ietf-opsawg-discardmodel.yang}
-<CODE ENDS>
-~~~~~~~~~~
 
 
 ## Where do packets get dropped? {#wheredropped}
