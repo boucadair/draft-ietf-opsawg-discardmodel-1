@@ -1399,7 +1399,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <p id="section-4.1-5">The following YANG tree diagram shows the complete structure:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.1-6">
 <pre>
-module: ietf-packet-discard-reporting
+module: ietf-packet-discard-reporting-sx
 
   structure packet-discard-reporting:
     +-- control-plane {control-plane-stats}?
@@ -2795,11 +2795,11 @@ Email: nchachmo@cisco.com
 <p id="appendix-A-1">The "ietf-packet-discard-reporting" yang module uses the "sx" structure defined in <span>[<a href="#RFC8791" class="cite xref">RFC8791</a>]</span>.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div class="breakable sourcecode" id="appendix-A-2">
 <pre>&lt;CODE BEGINS&gt;
-module ietf-packet-discard-reporting {
+module ietf-packet-discard-reporting-sx {
   yang-version 1.1;
   namespace
-    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting";
-  prefix plr;
+    "urn:ietf:params:xml:ns:yang:ietf-packet-discard-reporting-sx";
+  prefix plr-sx;
 
   import ietf-yang-structure-ext {
     prefix sx;
@@ -2831,7 +2831,7 @@ module ietf-packet-discard-reporting {
     "This module defines an information model for packet discard
      reporting.
 
-     Copyright (c) 2024 IETF Trust and the persons identified as
+     Copyright (c) 2025 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -2887,13 +2887,15 @@ module ietf-packet-discard-reporting {
   identity ingress {
     base direction;
     description
-      "Reports statistics for the received from the network packets";
+      "Reports statistics for the received from the network
+       packets";
   }
 
   identity egress {
     base direction;
     description
-      "Reports statistics for the sent to the network packets";
+      "Reports statistics for the sent to the network
+       packets";
   }
 
   identity address-family {
@@ -2935,7 +2937,8 @@ module ietf-packet-discard-reporting {
 
   grouping basic-packets-bytes-64 {
     description
-      "Grouping for 64-bit Layer 3 packet and byte counters.";
+      "Grouping for 64-bit Layer 3 packet and byte
+       counters.";
     uses basic-packets-64;
     leaf bytes {
       type uint64;
@@ -2956,7 +2959,8 @@ module ietf-packet-discard-reporting {
 
   grouping basic-frames-bytes-64 {
     description
-      "Grouping for 64-bit Layer 2 frame and byte counters.";
+      "Grouping for 64-bit Layer 2 frame and byte
+       counters.";
     uses basic-frames-64;
     leaf bytes {
       type uint64;
@@ -2977,7 +2981,8 @@ module ietf-packet-discard-reporting {
 
   grouping basic-packets-bytes-32 {
     description
-      "Grouping for 32-bit Layer 3 packet and byte counters.";
+      "Grouping for 32-bit Layer 3 packet and byte
+       counters.";
     uses basic-packets-32;
     leaf bytes {
       type uint32;
@@ -3089,11 +3094,13 @@ module ietf-packet-discard-reporting {
       "Layer 2 ingress frame error discard counters.";
     container rx {
       description
-        "Layer 2 ingress frame receive error discard counters.";
+        "Layer 2 ingress frame receive error discard
+         counters.";
       leaf frames {
         type uint32;
         description
-          "The number of frames discarded due to errors with the received frame.";
+          "The number of frames discarded due to errors
+           with the received frame.";
       }
       leaf crc-error {
         type uint32;
@@ -3103,17 +3110,21 @@ module ietf-packet-discard-reporting {
       leaf invalid-mac {
         type uint32;
         description
-          "The number of frames discarded due to an invalid MAC address.";
+          "The number of frames discarded due to an invalid
+           MAC address.";
       }
       leaf invalid-vlan {
         type uint32;
         description
-          "The number of frames discarded due to an invalid VLAN tag.";
+          "The number of frames discarded due to an invalid
+           VLAN tag.";
       }
       leaf invalid-frame {
         type uint32;
         description
-          "The number of invalid frames discarded due to other reasons, not limited to: malformed frames, frame-size violations.";
+          "The number of invalid frames discarded due to other
+           reasons, not limited to: malformed frames, frame-size
+           violations.";
       }
     }
   }
@@ -3123,47 +3134,58 @@ module ietf-packet-discard-reporting {
       "Layer 3 ingress packet error discard counters.";
     container rx {
       description
-        "Layer 3 ingress packet receive error discard counters.";
+        "Layer 3 ingress packet receive error discard
+         counters.";
       leaf packets {
         type uint32;
         description
-          "The number of Layer 3 packets discarded due to errors in the received packet.";
+          "The number of Layer 3 packets discarded due to
+           errors in the received packet.";
       }
       leaf checksum-error {
         type uint32;
         description
-          "The number of received packets discarded due to a checksum error.";
+          "The number of received packets discarded due
+           to a checksum error.";
       }
       leaf mtu-exceeded {
         type uint32;
         description
-          "The number of received packets discarded due to MTU exceeded.";
+          "The number of received packets discarded due to
+           MTU exceeded.";
       }
       leaf invalid-packet {
         type uint32;
         description
-          "The number of invalid packets discarded due to other reasons, not limited to: invalid packet length, invalid header fields, invalid options, invalid protocol version, invalid flags or control bits, malformed packets.";
+          "The number of invalid packets discarded due to other
+           reasons, not limited to: invalid packet length, invalid
+           header fields, invalid options, invalid protocol version,
+           invalid flags or control bits, malformed packets.";
       }
     }
     leaf ttl-expired {
       type uint32;
       description
-        "The number of received packets discarded due to expired TTL.";
+        "The number of received packets discarded due to
+         expired TTL.";
     }
     leaf no-route {
       type uint32;
       description
-        "The number of packets discarded due to not matching a valid route.";
+        "The number of packets discarded due to not matching
+         a valid route.";
     }
     leaf invalid-sid {
       type uint32;
       description
-        "The number of packets discarded due to an invalid Segment Routing (SR) SID.";
+        "The number of packets discarded due to an invalid
+         Segment Routing (SR) SID.";
     }
     leaf invalid-label {
       type uint32;
       description
-        "The number of packets discarded due to an invalid MPLS label.";
+        "The number of packets discarded due to an invalid
+         MPLS label.";
     }
   }
 
@@ -3173,12 +3195,14 @@ module ietf-packet-discard-reporting {
     leaf packets {
       type uint32;
       description
-        "The number of packets discarded due to internal errors.";
+        "The number of packets discarded due to internal
+         errors.";
     }
     leaf parity-error {
       type uint32;
       description
-        "The number of packets discarded due to parity errors.";
+        "The number of packets discarded due to parity
+         errors.";
     }
   }
 
@@ -3191,7 +3215,8 @@ module ietf-packet-discard-reporting {
       leaf frames {
         type uint32;
         description
-          "The number of Layer 2 frames discarded due to errors when transmitting.";
+          "The number of Layer 2 frames discarded due to
+           errors when transmitting.";
       }
     }
   }
@@ -3205,7 +3230,8 @@ module ietf-packet-discard-reporting {
       leaf packets {
         type uint32;
         description
-          "The number of Layer 3 packets discarded due to errors when transmitting.";
+          "The number of Layer 3 packets discarded due to
+           errors when transmitting.";
       }
     }
   }
@@ -3238,7 +3264,8 @@ module ietf-packet-discard-reporting {
     leaf frames {
       type uint32;
       description
-        "The number of Layer 2 frames discarded due to policy.";
+        "The number of Layer 2 frames discarded due
+         to policy.";
     }
     leaf acl {
       type uint32;
@@ -3262,23 +3289,27 @@ module ietf-packet-discard-reporting {
     }
     container policer {
       description
-        "The number of packets discarded due ingress policer violations.";
+        "The number of packets discarded due ingress
+         policer violations.";
       uses basic-packets-bytes-32;
     }
     leaf null-route {
       type uint32;
       description
-        "The number of packets discarded due to matching a null route.";
+        "The number of packets discarded due to matching
+         a null route.";
     }
     leaf rpf {
       type uint32;
       description
-        "The number of packets discarded due to failing Reverse Path Forwarding (RPF) check.";
+        "The number of packets discarded due to failing
+         Reverse Path Forwarding (RPF) check.";
     }
     leaf ddos {
       type uint32;
       description
-        "The number of packets discarded due to DDoS protection policies.";
+        "The number of packets discarded due to DDoS
+         protection policies.";
     }
   }
 
@@ -3413,9 +3444,11 @@ module ietf-packet-discard-reporting {
   /*
    * Main structure definition
    */
+
   sx:structure packet-discard-reporting {
     description
-      "Specifies the abstract structure of packet discard reporting data.";
+      "Specifies the abstract structure of packet discard
+       reporting data.";
     container control-plane {
       if-feature "control-plane-stats";
       description
@@ -3426,7 +3459,8 @@ module ietf-packet-discard-reporting {
       if-feature "per-interface-stats";
       key "name";
       description
-        "Indicates a list of interfaces for which packet discard reporting data is provided.";
+        "Indicates a list of interfaces for which packet
+         discard reporting data is provided.";
       leaf name {
         type string;
         description
