@@ -1,0 +1,83 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-03-04T01:36:50.165543+00:00",
+  "repo": "boucadair/draft-ietf-opsawg-discardmodel-1",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOOChD986NL4f3",
+      "title": "Quick review of the split",
+      "url": "https://github.com/boucadair/draft-ietf-opsawg-discardmodel-1/pull/1",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-03-03T17:31:16Z",
+      "updatedAt": "2025-03-03T17:34:06Z",
+      "baseRepository": "boucadair/draft-ietf-opsawg-discardmodel-1",
+      "baseRefName": "main",
+      "baseRefOid": "1f76187322e55cc7d1295b298e61039ab4fad45b",
+      "headRepository": "o-pylypenko/draft-ietf-opsawg-discardmodel",
+      "headRefName": "main",
+      "headRefOid": "0426767fb2e54e83c81ebb460fe2129849822306",
+      "closedAt": "2025-03-03T17:34:05Z",
+      "mergedAt": "2025-03-03T17:34:05Z",
+      "mergedBy": "boucadair",
+      "mergeCommit": {
+        "oid": "4ef21392d1ef2b5ab1adfde68bc323b01d45620c"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
